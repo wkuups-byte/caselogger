@@ -7,6 +7,7 @@
     { "source": "/api/procedures",   "destination": "/api/procedures.mjs" },
     { "source": "/api/config",       "destination": "/api/config.mjs" },
     { "source": "/api/coa/preview",  "destination": "/api/coa/preview.mjs" },
+    { "source": "/api/coa/summary",  "destination": "/api/coa/summary.mjs" },
     { "source": "/api/episodes",     "destination": "/api/episodes.mjs" },
     { "source": "/(.*)",             "destination": "/index.html" }
   ]

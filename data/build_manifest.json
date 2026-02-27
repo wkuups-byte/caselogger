@@ -1,0 +1,9 @@
+{
+  "surgical_pdf": "/Users/zacharystewart/Desktop/table-of-surgical-procedures-(as-of-1-jan-2024).pdf",
+  "coa_pdf": "/Users/zacharystewart/Desktop/Guidelines-for-Counting-Clinical-Experiences-Jan-2026.pdf",
+  "surgical_rows": 2372,
+  "primary_rows": 2011,
+  "mapping_rows": 2372,
+  "primary_to_coa_rows": 2011,
+  "master_hash": "f42c108b24f91613629ca764ed4c13d1a45b18bd656f2c4c76c150f5d50be9bd"
+}

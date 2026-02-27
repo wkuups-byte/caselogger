@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRNA Case Log Mock UI</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <h1>SRNA Episode Entry (COA Preview)</h1>
+        <p>Local mock UI backed by deterministic COA rules and generated procedure taxonomy.</p>
+      </div>
+      <div class="pill-row">
+        <span class="pill" id="health-pill">server: checking</span>
+        <button id="reload-data-btn" type="button">Reload Data</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card form-card">
+        <h2>Add Procedure</h2>
+        <p class="subtle">Episode-first: one anesthetic encounter, exactly one primary anesthesia procedure.</p>
+
+        <div class="field">
+          <label for="student-id">Student ID</label>
+          <input id="student-id" value="local-test-student" />
+        </div>
+
+        <div class="field">
+          <label for="proc-search">Primary Anesthesia Procedure (searchable)</label>
+          <input id="proc-search" placeholder="Type to search procedures" autocomplete="off" />
+          <div id="proc-results" class="search-results"></div>
+          <input id="primary-procedure-id" type="hidden" />
+          <div id="proc-selected" class="selected-proc empty">No procedure selected</div>
+        </div>
+
+        <fieldset class="group">
+          <legend>Optional modifiers</legend>
+          <div id="modifier-list" class="chips muted">Select a procedure to load modifiers.</div>
+        </fieldset>
+
+        <fieldset class="group two-col">
+          <legend>Participation</legend>
+          <div class="field">
+            <label for="participation-type">Participation</label>
+            <select id="participation-type">
+              <option value="primary">primary</option>
+              <option value="shared">shared</option>
+              <option value="relief">relief</option>
+              <option value="observe">observe</option>
+              <option value="chart-only">chart-only</option>
+            </select>
+          </div>
+          <div class="field" id="relief-minutes-wrap" hidden>
+            <label for="relief-minutes">Relief minutes</label>
+            <input id="relief-minutes" type="number" min="0" step="1" placeholder="e.g. 20" />
+          </div>
+          <div class="field" id="sig-event-wrap" hidden>
+            <label class="check"><input id="significant-event" type="checkbox" /> Significant event</label>
+            <input id="significant-event-note" placeholder="Rationale note (required if checked)" />
+          </div>
+          <div class="field" id="shared-note-wrap" hidden>
+            <label for="complexity-note">Complexity justification (required for shared)</label>
+            <textarea id="complexity-note" rows="2" placeholder="Why both learners had significant educational value"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="group four-col">
+          <legend>Case facts</legend>
+          <div class="field">
+            <label for="anesthesia-type">Anesthesia type</label>
+            <select id="anesthesia-type">
+              <option value="general">general</option>
+              <option value="regional">regional</option>
+              <option value="moderate_deep_sedation">moderate/deep sedation</option>
+              <option value="mac">mac</option>
+              <option value="local">local</option>
+              <option value="other">other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="asa-class">ASA</label>
+            <select id="asa-class">
+              <option value="">--</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="age-group">Patient age group</label>
+            <select id="age-group">
+              <option value="adult">adult</option>
+              <option value="geriatric_65_plus">geriatric_65_plus</option>
+              <option value="pediatric_2_12">pediatric_2_12</option>
+              <option value="pediatric_lt2">pediatric_lt2</option>
+              <option value="neonate_lt4w">neonate_lt4w</option>
+              <option value="adolescent_13_17">adolescent_13_17</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="check"><input id="is-emergency" type="checkbox" /> Emergency</label>
+            <label class="check"><input id="general-induction-independent" type="checkbox" /> Independent GA induction</label>
+            <label class="check"><input id="emergence-performed" type="checkbox" checked /> Emergence performed</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Skills (count only if performed_by_srna)</legend>
+          <div id="skills-grid" class="skills-grid"></div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Pre/Post anesthetic assessments</legend>
+          <div id="assessments-grid" class="assessments-grid"></div>
+        </fieldset>
+
+        <div class="actions">
+          <button id="preview-btn" type="button">Refresh COA Preview</button>
+          <button id="save-btn" type="button" class="primary">Save Episode (Mock)</button>
+          <span id="save-status" class="subtle"></span>
+        </div>
+      </section>
+
+      <aside class="card preview-card">
+        <h2>Counts toward COA</h2>
+        <div class="preview-block">
+          <h3>Will increment</h3>
+          <ul id="will-increment" class="list"></ul>
+        </div>
+        <div class="preview-block">
+          <h3>Blocked / why not</h3>
+          <ul id="blocked-reasons" class="list"></ul>
+        </div>
+        <div class="preview-block">
+          <h3>Participation Decision</h3>
+          <pre id="participation-json" class="json-box">{}</pre>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

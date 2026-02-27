@@ -1,0 +1,22 @@
+{
+  "name": "case-logger",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0"
+  },
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "dev:react": "vite",
+    "build_procedure_library": "./scripts/build_procedure_library",
+    "test:rules": "node --test tests/coa_rules_engine.test.mjs",
+    "test:mapping": "python3 -m unittest tests/procedure_mapping_examples_test.py"
+  }
+}

@@ -1244,8 +1244,9 @@ input[type='checkbox'] {
 }
 .coa-panel-row__label {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
+  gap: 3px 5px;
   min-width: 0;
   flex: 1;
 }
@@ -1254,6 +1255,8 @@ input[type='checkbox'] {
   font-weight: 500;
   color: var(--syn-text);
   min-width: 0;
+  flex-basis: 100%;
+  line-height: 1.3;
 }
 .coa-panel-row__req-tag {
   font-size: 10px;

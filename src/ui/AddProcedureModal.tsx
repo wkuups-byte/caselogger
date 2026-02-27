@@ -1335,7 +1335,7 @@ export function AddProcedureModal({
                     <span className="per-case-col per-case-col--num">#</span>
                     <span className="per-case-col per-case-col--asa">ASA</span>
                     <span className="per-case-col per-case-col--age">Age Group</span>
-                    <abbr className="per-case-col per-case-col--checks" title="Emergency case (unscheduled, life/limb-threatening)">Emergency</abbr>
+                    <abbr className="per-case-col per-case-col--checks per-case-col--emergency" title="Emergency case (unscheduled, life/limb-threatening)">Emergency</abbr>
                     <abbr className="per-case-col per-case-col--checks" title="Student performed independent general anesthesia induction without attending supervision">Indep. Induction</abbr>
                     <abbr className="per-case-col per-case-col--checks" title="Student performed emergence (extubation / removal of airway device and wake-up)">Emergence</abbr>
                   </div>

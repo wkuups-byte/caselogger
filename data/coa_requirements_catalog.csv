@@ -1,63 +1,63 @@
 requirement_key,label,min_required,count_type,simulation_allowed
 coa.hour.clinical_total,Total Clinical Hours,2000,hour,false
 coa.case.anesthesia.hours,Anesthesia hours,0,hour,false
-coa.assessment.preanesthetic_initial,Initial preanesthetic assessment,100,assessment,false
-coa.assessment.postanesthetic,Postanesthetic assessment,150,assessment,false
+coa.assessment.preanesthetic_initial,Initial preanesthetic assessment,50,assessment,false
+coa.assessment.postanesthetic,Postanesthetic assessment,50,assessment,false
 coa.assessment.comprehensive_hp,Comprehensive history and physical,0,assessment,true
 coa.assessment.comprehensive_hp.actual,Comprehensive H&P – Actual,0,assessment,false
 coa.assessment.comprehensive_hp.simulated,Comprehensive H&P – Simulated,0,assessment,true
-coa.skill.airway.chest_xray,Assessment of chest X-ray,10,skill,true
-coa.case.total,Total anesthetic cases,750,case,false
-coa.case.anesthesia.total,Anesthesia cases total,750,case,false
-coa.case.asa.class_i,ASA Class I cases,300,case,false
-coa.case.asa.class_ii,ASA Class II cases,100,case,false
+coa.skill.airway.chest_xray,Assessment of chest X-ray,5,skill,true
+coa.case.total,Total anesthetic cases,700,case,false
+coa.case.anesthesia.total,Anesthesia cases total,700,case,false
+coa.case.asa.class_i,ASA Class I cases,0,case,false
+coa.case.asa.class_ii,ASA Class II cases,0,case,false
 coa.case.asa.class_iii_to_vi,ASA Classes III–VI (total),200,case,false
-coa.case.asa.class_iii,ASA Class III cases,100,case,false
-coa.case.asa.class_iv,ASA Class IV cases,100,case,false
-coa.case.asa.class_v,ASA Class V cases,5,case,false
+coa.case.asa.class_iii,ASA Class III cases,50,case,false
+coa.case.asa.class_iv,ASA Class IV cases,10,case,false
+coa.case.asa.class_v,ASA Class V cases,0,case,false
 coa.case.asa.class_vi,ASA Class VI cases,0,case,false
-coa.case.age.geriatric_65_plus,Geriatric (65+) cases,200,case,false
-coa.case.age.pediatric_total,Pediatric cases (total),100,case,false
-coa.case.age.pediatric_2_12,Pediatric (2–12 yr) cases,75,case,false
-coa.case.age.pediatric_lt2,Pediatric (< 2 years) cases,25,case,false
-coa.case.age.neonate_lt4w,Neonate (< 4 weeks) cases,5,case,false
-coa.case.emergency,Trauma/Emergency cases,50,case,false
-coa.case.ob.obstetrical_management,Obstetrical management (total),40,case,false
-coa.case.ob.cesarean_delivery,Cesarean delivery,15,case,false
-coa.case.ob.analgesia_for_labor,Analgesia for labor,15,case,false
-coa.case.pain_management_encounter,Pain management encounters,50,case,false
+coa.case.age.geriatric_65_plus,Geriatric (65+) cases,100,case,false
+coa.case.age.pediatric_total,Pediatric cases (total),0,case,false
+coa.case.age.pediatric_2_12,Pediatric (2–12 yr) cases,30,case,false
+coa.case.age.pediatric_lt2,Pediatric (< 2 years) cases,10,case,false
+coa.case.age.neonate_lt4w,Neonate (< 4 weeks) cases,0,case,false
+coa.case.emergency,Trauma/Emergency cases,30,case,false
+coa.case.ob.obstetrical_management,Obstetrical management (total),30,case,false
+coa.case.ob.cesarean_delivery,Cesarean delivery,10,case,false
+coa.case.ob.analgesia_for_labor,Analgesia for labor,10,case,false
+coa.case.pain_management_encounter,Pain management encounters,15,case,false
 coa.case.anatomic.intra_abdominal,Anatomic: Intra-abdominal,75,case,false
-coa.case.anatomic.intracranial_total,Anatomic: Intracranial (total),20,case,false
-coa.case.anatomic.intracranial_open,Anatomic: Intracranial – Open,10,case,false
-coa.case.anatomic.intracranial_closed,Anatomic: Intracranial – Closed,10,case,false
+coa.case.anatomic.intracranial_total,Anatomic: Intracranial (total),5,case,false
+coa.case.anatomic.intracranial_open,Anatomic: Intracranial – Open,3,case,false
+coa.case.anatomic.intracranial_closed,Anatomic: Intracranial – Closed,0,case,false
 coa.case.anatomic.oropharyngeal,Anatomic: Oropharyngeal,20,case,false
-coa.case.anatomic.intrathoracic_total,Anatomic: Intrathoracic (total),40,case,false
-coa.case.anatomic.intrathoracic_open_heart,Anatomic: Open heart (with/without CPB),10,case,false
+coa.case.anatomic.intrathoracic_total,Anatomic: Intrathoracic (total),15,case,false
+coa.case.anatomic.intrathoracic_open_heart,Anatomic: Open heart (with/without CPB),5,case,false
 coa.case.anatomic.intrathoracic_open_heart_cpb,Anatomic: Open heart – With CPB,0,case,false
 coa.case.anatomic.intrathoracic_open_heart_no_cpb,Anatomic: Open heart – Without CPB,0,case,false
-coa.case.anatomic.intrathoracic_closed_heart,Anatomic: Closed heart,10,case,false
+coa.case.anatomic.intrathoracic_closed_heart,Anatomic: Closed heart,0,case,false
 coa.case.anatomic.intrathoracic_lung,Anatomic: Intrathoracic – Lung,5,case,false
 coa.case.anatomic.intrathoracic_other,Anatomic: Intrathoracic – Other,0,case,false
-coa.case.anatomic.neck,Anatomic: Neck,10,case,false
+coa.case.anatomic.neck,Anatomic: Neck,5,case,false
 coa.case.anatomic.neuroskeletal,Anatomic: Neuroskeletal,20,case,false
-coa.case.anatomic.vascular,Anatomic: Vascular,30,case,false
-coa.case.anesthesia.moderate_deep_sedation,Moderate/deep sedation,50,case,false
+coa.case.anatomic.vascular,Anatomic: Vascular,10,case,false
+coa.case.anesthesia.moderate_deep_sedation,Moderate/deep sedation,25,case,false
 coa.case.anesthesia.general,General anesthesia,400,case,false
-coa.case.anesthesia.general_induction_independent,General anesthetic induction – minimal/no assistance,100,case,false
-coa.skill.airway.inhalation_induction,Inhalation induction,40,skill,false
-coa.skill.airway.mask_ventilation,Mask ventilation (total),200,skill,false
+coa.case.anesthesia.general_induction_independent,General anesthetic induction – minimal/no assistance,50,case,false
+coa.skill.airway.inhalation_induction,Inhalation induction,25,skill,false
+coa.skill.airway.mask_ventilation,Mask ventilation (total),100,skill,false
 coa.skill.airway.mask_ventilation.maintenance,Mask ventilation – Maintenance,25,skill,false
-coa.skill.airway.supraglottic_total,Supraglottic airway devices (total),50,skill,false
+coa.skill.airway.supraglottic_total,Supraglottic airway devices (total),35,skill,false
 coa.skill.airway.supraglottic_lma,Supraglottic – Laryngeal mask (LMA),0,skill,false
 coa.skill.airway.supraglottic_other,Supraglottic – Other devices,0,skill,false
 coa.skill.airway.tracheal_intubation_total,Tracheal intubation (total),250,skill,false
 coa.skill.airway.tracheal_intubation_oral,Tracheal intubation – Oral,0,skill,false
 coa.skill.airway.tracheal_intubation_nasal,Tracheal intubation – Nasal,5,skill,false
-coa.skill.airway.alt_intubation_total,Alternative tracheal intubation techniques (total),50,skill,true
-coa.skill.airway.alt_intubation_endoscopic_total,Endoscopic techniques (total),15,skill,true
+coa.skill.airway.alt_intubation_total,Alternative tracheal intubation techniques (total),25,skill,true
+coa.skill.airway.alt_intubation_endoscopic_total,Endoscopic techniques (total),5,skill,true
 coa.skill.airway.alt_intubation_endoscopic_actual,Endoscopic techniques – Actual tracheal tube placement,0,skill,false
 coa.skill.airway.alt_intubation_endoscopic_simulated,Endoscopic techniques – Simulated tracheal tube placement,0,skill,true
-coa.skill.airway.alt_intubation_other,Alternative intubation – Other techniques,25,skill,false
+coa.skill.airway.alt_intubation_other,Alternative intubation – Other techniques,0,skill,false
 coa.case.emergence,Emergence from anesthesia,300,case,false
 coa.skill.regional.actual_administration_total,Regional actual administration (total),35,skill,false
 coa.skill.regional.spinal,Spinal – Actual administration (total),10,skill,false
@@ -76,20 +76,20 @@ coa.skill.regional.peripheral_pain_mgmt_lower,Peripheral block – Pain mgmt –
 coa.skill.regional.other_total,Regional other techniques (total),0,skill,false
 coa.skill.regional.other_anesthesia,Regional other – Anesthesia,0,skill,false
 coa.skill.regional.other_pain_mgmt,Regional other – Pain management,0,skill,false
-coa.skill.regional.management_total,Regional management (total),50,skill,false
+coa.skill.regional.management_total,Regional management (total),35,skill,false
 coa.skill.regional.management_anesthesia,Regional management – Anesthesia,0,skill,false
 coa.skill.regional.management_pain_mgmt,Regional management – Pain management,0,skill,false
 coa.skill.arterial.line_placement,Arterial puncture/catheter insertion,25,skill,false
 coa.skill.arterial.monitoring,Intra-arterial blood pressure monitoring,30,skill,false
-coa.skill.cvc.nonpicc_placement,CVC placement – Non-PICC (total),15,skill,true
+coa.skill.cvc.nonpicc_placement,CVC placement – Non-PICC (total),10,skill,true
 coa.skill.cvc.nonpicc_actual,CVC placement – Non-PICC – Actual,5,skill,false
 coa.skill.cvc.nonpicc_simulated,CVC placement – Non-PICC – Simulated,0,skill,true
-coa.skill.cvc.monitoring,Central venous catheter monitoring,15,skill,false
+coa.skill.cvc.monitoring,Central venous catheter monitoring,10,skill,false
 coa.skill.picc.placement,PICC placement (total),0,skill,true
 coa.skill.picc.actual,PICC placement – Actual,0,skill,false
 coa.skill.picc.simulated,PICC placement – Simulated,0,skill,true
-coa.skill.pac.placement,Pulmonary artery catheter placement,5,skill,false
-coa.skill.pac.monitoring,Pulmonary artery catheter monitoring,10,skill,false
+coa.skill.pac.placement,Pulmonary artery catheter placement,0,skill,false
+coa.skill.pac.monitoring,Pulmonary artery catheter monitoring,0,skill,false
 coa.skill.iv.placement,Intravenous catheter placement,100,skill,false
 coa.skill.advanced_hemodynamic_monitoring,Advanced non-invasive hemodynamic monitoring,0,skill,false
 coa.skill.ultrasound.guided_total,Ultrasound-guided techniques (total),20,skill,true

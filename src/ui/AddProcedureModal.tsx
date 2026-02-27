@@ -59,6 +59,8 @@ interface SkillDef {
   isParent?: boolean;
   /** The skill_code of the parent row — used to group sub-items under their parent */
   parentCode?: string;
+  /** When set, shows a "US guided" toggle on this counter that auto-emits this us_ skill code */
+  usGuidedSkillCode?: string;
 }
 
 interface SkillGroup {
@@ -413,48 +415,48 @@ const SKILL_GROUPS: SkillGroup[] = [
 
       // ── Upper Extremity ─────────────────────────────────────────────────────
       { skill_code: 'regional_pnb_upper', label: 'Upper Extremity PNB', isParent: true },
-        { skill_code: 'regional_pnb_upper_interscalene',    label: 'Interscalene',                 isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_supraclavicular', label: 'Supraclavicular',              isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_infraclavicular', label: 'Infraclavicular',              isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_axillary',        label: 'Axillary',                     isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_suprascapular',   label: 'Suprascapular',                isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_wrist',           label: 'Wrist Block',                  isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_digital',         label: 'Digital Block',                isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_median_elbow',    label: 'Median Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_ulnar_elbow',     label: 'Ulnar Nerve (elbow)',           isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_radial_elbow',    label: 'Radial Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper' },
+        { skill_code: 'regional_pnb_upper_interscalene',    label: 'Interscalene',                 isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_supraclavicular', label: 'Supraclavicular',              isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_infraclavicular', label: 'Infraclavicular',              isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_axillary',        label: 'Axillary',                     isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_suprascapular',   label: 'Suprascapular',                isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_wrist',           label: 'Wrist Block',                  isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_digital',         label: 'Digital Block',                isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_median_elbow',    label: 'Median Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_ulnar_elbow',     label: 'Ulnar Nerve (elbow)',           isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_radial_elbow',    label: 'Radial Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
         { skill_code: 'regional_pnb_upper_walant',          label: 'WALANT',                       isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_unspecified',     label: 'Upper Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_upper' },
+        { skill_code: 'regional_pnb_upper_unspecified',     label: 'Upper Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
 
       // ── Lower Extremity ─────────────────────────────────────────────────────
       { skill_code: 'regional_pnb_lower', label: 'Lower Extremity PNB', isParent: true },
-        { skill_code: 'regional_pnb_lower_femoral',          label: 'Femoral Nerve',                isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_adductor_canal',   label: 'Adductor Canal (Subsartorial)', isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_popliteal',        label: 'Popliteal Sciatic',            isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_ankle',            label: 'Ankle Block',                  isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_saphenous',        label: 'Saphenous Nerve',              isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_ipack',            label: 'iPACK',                        isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_lfcn',             label: 'Lateral Femoral Cutaneous',    isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_obturator',        label: 'Obturator Nerve',              isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_fascia_iliaca',    label: 'Fascia Iliaca',                isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_genicular',        label: 'Genicular Nerve Block',        isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_posterior_tibial', label: 'Posterior Tibial Nerve',       isSubItem: true, parentCode: 'regional_pnb_lower' },
-        { skill_code: 'regional_pnb_lower_unspecified',      label: 'Lower Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_lower' },
+        { skill_code: 'regional_pnb_lower_femoral',          label: 'Femoral Nerve',                isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_adductor_canal',   label: 'Adductor Canal (Subsartorial)', isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_popliteal',        label: 'Popliteal Sciatic',            isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_ankle',            label: 'Ankle Block',                  isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_saphenous',        label: 'Saphenous Nerve',              isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_ipack',            label: 'iPACK',                        isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_lfcn',             label: 'Lateral Femoral Cutaneous',    isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_obturator',        label: 'Obturator Nerve',              isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_fascia_iliaca',    label: 'Fascia Iliaca',                isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_genicular',        label: 'Genicular Nerve Block',        isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_posterior_tibial', label: 'Posterior Tibial Nerve',       isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_lower_unspecified',      label: 'Lower Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_lower', usGuidedSkillCode: 'us_guided_regional' },
 
       // ── Truncal ─────────────────────────────────────────────────────────────
       { skill_code: 'regional_other', label: 'Truncal Blocks', isParent: true },
-        { skill_code: 'regional_other_tap',              label: 'TAP Block',                        isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_tap_subcostal',    label: 'Subcostal TAP',                    isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_rectus_sheath',    label: 'Rectus Sheath Block',              isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_pecs',             label: 'PECS I / PECS II',                 isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_serratus',         label: 'Serratus Anterior Plane',          isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_paravertebral',    label: 'Paravertebral Block',              isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_esp',              label: 'Erector Spinae Plane (ESP)',        isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_ql',               label: 'Quadratus Lumborum (QL)',          isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_ilioinguinal',     label: 'Ilio-inguinal / Iliohypogastric',  isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_genitofemoral',    label: 'Genitofemoral Nerve',              isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_tfp',              label: 'Transversalis Fascia Plane',       isSubItem: true, parentCode: 'regional_other' },
-        { skill_code: 'regional_other_unspecified',      label: 'Truncal – Unspecified',            isSubItem: true, parentCode: 'regional_other' },
+        { skill_code: 'regional_other_tap',              label: 'TAP Block',                        isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_tap_subcostal',    label: 'Subcostal TAP',                    isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_rectus_sheath',    label: 'Rectus Sheath Block',              isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_pecs',             label: 'PECS I / PECS II',                 isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_serratus',         label: 'Serratus Anterior Plane',          isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_paravertebral',    label: 'Paravertebral Block',              isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_esp',              label: 'Erector Spinae Plane (ESP)',        isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_ql',               label: 'Quadratus Lumborum (QL)',          isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_ilioinguinal',     label: 'Ilio-inguinal / Iliohypogastric',  isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_genitofemoral',    label: 'Genitofemoral Nerve',              isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_tfp',              label: 'Transversalis Fascia Plane',       isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_other_unspecified',      label: 'Truncal – Unspecified',            isSubItem: true, parentCode: 'regional_other', usGuidedSkillCode: 'us_guided_regional' },
 
       // ── Head / Neck / Ophthalmic ─────────────────────────────────────────────
       { skill_code: 'regional_headneck', label: 'Head / Neck / Ophthalmic', isParent: true },
@@ -476,11 +478,11 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     group: 'Vascular Access & Monitoring',
     skills: [
-      { skill_code: 'arterial_line',       label: 'A-line Placement',          requires_success: true },
+      { skill_code: 'arterial_line',       label: 'A-line Placement',          requires_success: true, usGuidedSkillCode: 'us_guided_vascular' },
       { skill_code: 'arterial_monitoring', label: 'Intra-arterial Monitoring' },
-      { skill_code: 'cvc_nonpicc',         label: 'CVC Placement (non-PICC)',   requires_success: true },
+      { skill_code: 'cvc_nonpicc',         label: 'CVC Placement (non-PICC)',   requires_success: true, usGuidedSkillCode: 'us_guided_vascular' },
       { skill_code: 'cvc_monitoring',      label: 'CVC Monitoring' },
-      { skill_code: 'picc',                label: 'PICC Placement',             requires_success: true },
+      { skill_code: 'picc',                label: 'PICC Placement',             requires_success: true, usGuidedSkillCode: 'us_guided_vascular' },
       { skill_code: 'pac_placement',       label: 'PA Catheter Placement',      requires_success: true },
       { skill_code: 'pac_monitoring',      label: 'PA Catheter Monitoring' },
       { skill_code: 'iv_peripheral',       label: 'Peripheral IV (PIV)',        requires_success: true },
@@ -662,8 +664,8 @@ function makeCaseRows(n: number, prev: CaseRow[]): CaseRow[] {
   return Array.from({ length: n }, (_, i) => prev[i] ?? { ...DEFAULT_CASE_ROW });
 }
 
-// Skill count state: { [skill_code]: { count: number; successCount: number } }
-type SkillCounts = Record<string, { count: number; successCount: number }>;
+// Skill count state: { [skill_code]: { count: number; successCount: number; usGuided?: boolean } }
+type SkillCounts = Record<string, { count: number; successCount: number; usGuided?: boolean }>;
 
 function makeSkillCounts(): SkillCounts {
   return Object.fromEntries(ALL_SKILL_DEFS.map((s) => [s.skill_code, { count: 0, successCount: 0 }]));
@@ -756,8 +758,8 @@ function SkillCounter({
   coaKeyOverride,
 }: {
   def: SkillDef;
-  counts: { count: number; successCount: number };
-  onChange: (patch: { count?: number; successCount?: number }) => void;
+  counts: { count: number; successCount: number; usGuided?: boolean };
+  onChange: (patch: { count?: number; successCount?: number; usGuided?: boolean }) => void;
   /** Overrides SKILL_TO_COA_KEY lookup for tooltip — used by clinical encounter counters */
   coaKeyOverride?: string;
 }) {
@@ -813,6 +815,17 @@ function SkillCounter({
               >+</button>
             </div>
           </div>
+        )}
+
+        {def.usGuidedSkillCode && counts.count > 0 && (
+          <label className="skill-row__us-toggle">
+            <input
+              type="checkbox"
+              checked={counts.usGuided ?? false}
+              onChange={(e) => onChange({ usGuided: e.target.checked })}
+            />
+            <span className="skill-row__us-label">🔊 US guided</span>
+          </label>
         )}
       </div>
     </div>
@@ -977,11 +990,22 @@ export function AddProcedureModal({
     if (sc.count === 0) {
       return [{ skill_code: def.skill_code, performed_by_srna: false, successful: def.requires_success ? false : undefined }];
     }
-    return Array.from({ length: sc.count }, (_, i) => ({
+    const entries = Array.from({ length: sc.count }, (_, i) => ({
       skill_code: def.skill_code,
       performed_by_srna: true,
       successful: def.requires_success ? i < sc.successCount : undefined,
+      ultrasound_guided: sc.usGuided ? true : undefined,
     }));
+    // Auto-emit US-guided entries when the toggle is on
+    if (sc.usGuided && def.usGuidedSkillCode) {
+      const usEntries = Array.from({ length: sc.count }, () => ({
+        skill_code: def.usGuidedSkillCode as string,
+        performed_by_srna: true,
+        successful: undefined,
+      }));
+      return [...entries, ...usEntries];
+    }
+    return entries;
   });
 
   React.useEffect(() => {
@@ -1112,11 +1136,22 @@ export function AddProcedureModal({
             if (instanceCount === 0) {
               return [{ skill_code: def.skill_code, performed_by_srna: false, successful: def.requires_success ? false : undefined }];
             }
-            return Array.from({ length: instanceCount }, (_, i) => ({
+            const entries = Array.from({ length: instanceCount }, (_, i) => ({
               skill_code: def.skill_code,
               performed_by_srna: true,
               successful: def.requires_success ? i < successCount : undefined,
+              ultrasound_guided: sc.usGuided ? true : undefined,
             }));
+            // Auto-emit US-guided entries when the toggle is on
+            if (sc.usGuided && def.usGuidedSkillCode) {
+              const usEntries = Array.from({ length: instanceCount }, () => ({
+                skill_code: def.usGuidedSkillCode as string,
+                performed_by_srna: true,
+                successful: undefined,
+              }));
+              return [...entries, ...usEntries];
+            }
+            return entries;
           });
 
           await onSubmit({

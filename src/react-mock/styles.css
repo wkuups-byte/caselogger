@@ -898,6 +898,31 @@ input[type='checkbox'] {
   text-transform: uppercase; letter-spacing: 0.04em;
   white-space: nowrap;
 }
+.skill-row__us-toggle {
+  display: flex; align-items: center; gap: 5px;
+  cursor: pointer; user-select: none;
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1.5px solid var(--syn-border-dark);
+  background: var(--syn-surface);
+  transition: background .12s, border-color .12s;
+  white-space: nowrap;
+}
+.skill-row__us-toggle:has(input:checked) {
+  background: #e8f0ff;
+  border-color: var(--syn-purple);
+}
+.skill-row__us-toggle input[type="checkbox"] {
+  accent-color: var(--syn-purple);
+  width: 13px; height: 13px; cursor: pointer; flex-shrink: 0;
+}
+.skill-row__us-label {
+  font-size: 11px; font-weight: 600;
+  color: var(--syn-text-secondary);
+}
+.skill-row__us-toggle:has(input:checked) .skill-row__us-label {
+  color: var(--syn-purple);
+}
 .skill-row__controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .skill-counter-group { display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .skill-counter-label {

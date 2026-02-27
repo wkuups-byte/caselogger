@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npx vite build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/health",       "destination": "/api/health.mjs" },
+    { "source": "/api/procedures",   "destination": "/api/procedures.mjs" },
+    { "source": "/api/config",       "destination": "/api/config.mjs" },
+    { "source": "/api/coa/preview",  "destination": "/api/coa/preview.mjs" },
+    { "source": "/api/episodes",     "destination": "/api/episodes.mjs" },
+    { "source": "/(.*)",             "destination": "/index.html" }
+  ]
+}

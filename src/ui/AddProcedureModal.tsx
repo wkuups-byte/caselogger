@@ -425,6 +425,7 @@ const SKILL_GROUPS: SkillGroup[] = [
         { skill_code: 'regional_pnb_upper_median_elbow',    label: 'Median Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
         { skill_code: 'regional_pnb_upper_ulnar_elbow',     label: 'Ulnar Nerve (elbow)',           isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
         { skill_code: 'regional_pnb_upper_radial_elbow',    label: 'Radial Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
+        { skill_code: 'regional_pnb_upper_bier',             label: 'Bier Block (IVRA)',             isSubItem: true, parentCode: 'regional_pnb_upper' },
         { skill_code: 'regional_pnb_upper_walant',          label: 'WALANT',                       isSubItem: true, parentCode: 'regional_pnb_upper' },
         { skill_code: 'regional_pnb_upper_unspecified',     label: 'Upper Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
 
@@ -525,6 +526,7 @@ const SKILL_TO_COA_KEY: Record<string, string> = {
   regional_pnb_upper_median_elbow:          'coa.skill.regional.peripheral_anesthesia_upper',
   regional_pnb_upper_ulnar_elbow:           'coa.skill.regional.peripheral_anesthesia_upper',
   regional_pnb_upper_radial_elbow:          'coa.skill.regional.peripheral_anesthesia_upper',
+  regional_pnb_upper_bier:                  'coa.skill.regional.peripheral_anesthesia_upper',
   regional_pnb_upper_walant:                'coa.skill.regional.peripheral_anesthesia_upper',
   regional_pnb_upper_unspecified:           'coa.skill.regional.peripheral_anesthesia_upper',
   // Lower extremity

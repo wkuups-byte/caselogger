@@ -152,3 +152,6 @@ regional_headneck_unspecified,coa.skill.regional.actual_administration_total,per
 regional_pnb_lower_adductor_canal,coa.skill.regional.peripheral_block,performed_by_srna=true,Adductor canal block counts toward peripheral block total.
 regional_pnb_lower_adductor_canal,coa.skill.regional.peripheral_anesthesia_lower,performed_by_srna=true,Adductor canal – lower extremity anesthesia subcategory.
 regional_pnb_lower_adductor_canal,coa.skill.regional.actual_administration_total,performed_by_srna=true,Adductor canal counts toward regional actual administration total.
+regional_pnb_upper_bier,coa.skill.regional.peripheral_block,performed_by_srna=true,Bier Block (IVRA) counts toward peripheral block total.
+regional_pnb_upper_bier,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,Bier Block (IVRA) – upper extremity anesthesia subcategory.
+regional_pnb_upper_bier,coa.skill.regional.actual_administration_total,performed_by_srna=true,Bier Block (IVRA) counts toward regional actual administration total.

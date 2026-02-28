@@ -1291,6 +1291,69 @@ export function AddProcedureModal({
                     </label>
                   </div>
 
+                  {/* ── Regional technique quick-picker ── */}
+                  {anesthesiaType === 'regional' && (() => {
+                    const spinalCount  = skillCounts['regional_spinal']?.count  ?? 0;
+                    const epidCount    = skillCounts['regional_epidural']?.count ?? 0;
+                    const spinalActive = spinalCount > 0;
+                    const epidActive   = epidCount   > 0;
+                    const cseActive    = spinalActive && epidActive;
+
+                    const openRegional = () =>
+                      setExpandedSkillGroups((prev) => new Set([...prev, 'Regional']));
+
+                    const pickSpinal = () => {
+                      patchSkill('regional_spinal', { count: Math.max(1, spinalCount) });
+                      openRegional();
+                    };
+                    const pickEpidural = () => {
+                      patchSkill('regional_epidural', { count: Math.max(1, epidCount) });
+                      openRegional();
+                    };
+                    const pickCSE = () => {
+                      patchSkill('regional_spinal',   { count: Math.max(1, spinalCount) });
+                      patchSkill('regional_epidural',  { count: Math.max(1, epidCount)  });
+                      openRegional();
+                    };
+
+                    return (
+                      <div className="regional-technique-picker">
+                        <span className="regional-technique-picker__label">Which technique?</span>
+                        <div className="regional-technique-picker__pills">
+                          <button type="button"
+                            className={`regional-pill${spinalActive && !cseActive ? ' regional-pill--active' : ''}`}
+                            onClick={pickSpinal}>
+                            Spinal
+                          </button>
+                          <button type="button"
+                            className={`regional-pill${epidActive && !cseActive ? ' regional-pill--active' : ''}`}
+                            onClick={pickEpidural}>
+                            Epidural
+                          </button>
+                          <button type="button"
+                            className={`regional-pill${cseActive ? ' regional-pill--active' : ''}`}
+                            onClick={pickCSE}>
+                            CSE
+                          </button>
+                          <button type="button"
+                            className="regional-pill regional-pill--neutral"
+                            onClick={openRegional}>
+                            Other ↓
+                          </button>
+                        </div>
+                        {(spinalActive || epidActive) && (
+                          <p className="regional-technique-picker__hint">
+                            {cseActive
+                              ? 'Combined Spinal-Epidural — both counted. Adjust quantities in Regional ↓'
+                              : spinalActive
+                                ? 'Spinal logged. Fine-tune in Regional ↓'
+                                : 'Epidural logged. Fine-tune in Regional ↓'}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
+
                   {participationType === 'relief' && (
                     <div className="coa-grid two">
                       <label>

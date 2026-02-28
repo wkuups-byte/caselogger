@@ -639,6 +639,66 @@ body {
 .coa-inline-check input { width: auto; }
 .coa-span-two { grid-column: 1 / -1; }
 
+/* ── Regional technique quick-picker ─────────────────────────────────────── */
+.regional-technique-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: #f5f3ff;
+  border: 1.5px solid #c4b5fd;
+  border-radius: var(--syn-radius-sm);
+  margin-top: 4px;
+}
+.regional-technique-picker__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6d28d9;
+}
+.regional-technique-picker__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.regional-pill {
+  padding: 7px 18px;
+  border-radius: 99px;
+  border: 2px solid #c4b5fd;
+  background: white;
+  color: #5b21b6;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+  font-family: inherit;
+}
+.regional-pill:hover { background: #ede9fe; border-color: #7c3aed; }
+.regional-pill--active {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: white;
+  box-shadow: 0 2px 8px rgba(124,58,237,.35);
+}
+.regional-pill--active:hover { background: #6d28d9; border-color: #6d28d9; }
+.regional-pill--neutral {
+  background: transparent;
+  border-color: #ddd6fe;
+  color: #7c3aed;
+  font-weight: 600;
+}
+.regional-pill--neutral:hover { background: #ede9fe; }
+.regional-technique-picker__hint {
+  font-size: 11px;
+  color: #6d28d9;
+  margin: 0;
+  font-style: italic;
+}
+@media (max-width: 480px) {
+  .regional-pill { padding: 6px 14px; font-size: 12px; }
+}
+
 /* ─── Label row (label + tooltip) ────────────────────────────────────────── */
 .coa-label-row {
   display: inline-flex;

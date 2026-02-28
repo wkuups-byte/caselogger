@@ -79,9 +79,6 @@ regional_pnb_upper_ulnar_elbow,coa.skill.regional.actual_administration_total,pe
 regional_pnb_upper_radial_elbow,coa.skill.regional.peripheral_block,performed_by_srna=true,Radial nerve at elbow counts toward peripheral block total.
 regional_pnb_upper_radial_elbow,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,Radial nerve at elbow – upper extremity anesthesia subcategory.
 regional_pnb_upper_radial_elbow,coa.skill.regional.actual_administration_total,performed_by_srna=true,Radial nerve at elbow counts toward regional actual administration total.
-regional_pnb_upper_walant,coa.skill.regional.peripheral_block,performed_by_srna=true,WALANT counts toward peripheral block total.
-regional_pnb_upper_walant,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,WALANT – upper extremity anesthesia subcategory.
-regional_pnb_upper_walant,coa.skill.regional.actual_administration_total,performed_by_srna=true,WALANT counts toward regional actual administration total.
 regional_pnb_upper_unspecified,coa.skill.regional.peripheral_block,performed_by_srna=true,Unspecified upper extremity PNB counts toward peripheral block total.
 regional_pnb_upper_unspecified,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,Unspecified upper extremity PNB – anesthesia subcategory.
 regional_pnb_upper_unspecified,coa.skill.regional.actual_administration_total,performed_by_srna=true,Unspecified upper extremity PNB counts toward regional actual administration total.

@@ -426,7 +426,6 @@ const SKILL_GROUPS: SkillGroup[] = [
         { skill_code: 'regional_pnb_upper_ulnar_elbow',     label: 'Ulnar Nerve (elbow)',           isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
         { skill_code: 'regional_pnb_upper_radial_elbow',    label: 'Radial Nerve (elbow)',          isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
         { skill_code: 'regional_pnb_upper_bier',             label: 'Bier Block (IVRA)',             isSubItem: true, parentCode: 'regional_pnb_upper' },
-        { skill_code: 'regional_pnb_upper_walant',          label: 'WALANT',                       isSubItem: true, parentCode: 'regional_pnb_upper' },
         { skill_code: 'regional_pnb_upper_unspecified',     label: 'Upper Extremity – Unspecified', isSubItem: true, parentCode: 'regional_pnb_upper', usGuidedSkillCode: 'us_guided_regional' },
 
       // ── Lower Extremity ─────────────────────────────────────────────────────

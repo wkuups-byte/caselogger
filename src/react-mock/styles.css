@@ -969,6 +969,13 @@ input[type='checkbox'] {
 .skill-counter__val--success { color: var(--syn-good); }
 .skill-counter__of { font-size: 11px; font-weight: 500; color: var(--syn-text-soft); }
 
+@media (max-width: 480px) {
+  .skill-row__controls { gap: 6px; }
+  .skill-counter__btn { width: 28px; height: 28px; font-size: 16px; }
+  .skill-counter__val { min-width: 32px; font-size: 13px; line-height: 28px; }
+  .skill-row--counter { gap: 8px; padding: 8px 8px; }
+}
+
 /* ─── Assessment rows ─────────────────────────────────────────────────────── */
 .assessment-row {
   display: grid;

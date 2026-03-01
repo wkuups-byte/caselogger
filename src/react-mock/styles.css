@@ -1049,9 +1049,8 @@ input[type='checkbox'] {
   transition: border-color .15s, background .15s;
   min-height: 48px;
 }
-.assessment-row:has(input[type=checkbox]:checked) {
-  border-color: var(--syn-purple-muted);
-  background: var(--syn-purple-soft);
+.assessment-row:has(.multi-stepper__val:not(:empty)) {
+  border-color: var(--syn-border);
 }
 .assessment-row__name {
   font-size: 13px;
@@ -1061,14 +1060,15 @@ input[type='checkbox'] {
   align-items: center;
   gap: 5px;
 }
-.assessment-row label {
-  display: inline-flex;
+.assessment-row__controls {
+  display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--syn-text-mid);
-  cursor: pointer;
+}
+.assessment-row__of {
+  font-size: 12px;
+  color: var(--syn-text-soft);
+  white-space: nowrap;
 }
 .assessment-row select {
   width: auto;

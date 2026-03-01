@@ -899,21 +899,19 @@ export function AddProcedureModal({
   const [sentinelEvent, setSentinelEvent] = React.useState(false);
 
   // ── Assessments (shared) ──
-  // In anesthesia-only mode start with all assessments unchecked so the COA
-  // preview panel stays empty until the user actively checks something.
-  const [assessments, setAssessments] = React.useState<EpisodeAssessmentSelection[]>(
-    anesthesiaOnly
-      ? [
-          { assessment_type: 'preanesthetic_initial', performed_by_srna: false, validation_method: 'in_chart' },
-          { assessment_type: 'postanesthetic',        performed_by_srna: false, validation_method: 'case_log_only' },
-          { assessment_type: 'comprehensive_hp',      performed_by_srna: false, validation_method: 'in_chart' },
-        ]
-      : [
-          { assessment_type: 'preanesthetic_initial', performed_by_srna: true,  validation_method: 'in_chart' },
-          { assessment_type: 'postanesthetic',        performed_by_srna: false, validation_method: 'case_log_only' },
-          { assessment_type: 'comprehensive_hp',      performed_by_srna: false, validation_method: 'in_chart' },
-        ]
-  );
+  // `assessments` holds the validation_method per type.
+  // `assessmentCounts` tracks how many of each assessment the SRNA performed;
+  // during submission each case row gets performed_by_srna=true if its rowIndex < count.
+  const [assessments, setAssessments] = React.useState<EpisodeAssessmentSelection[]>([
+    { assessment_type: 'preanesthetic_initial', performed_by_srna: false, validation_method: 'in_chart' },
+    { assessment_type: 'postanesthetic',        performed_by_srna: false, validation_method: 'case_log_only' },
+    { assessment_type: 'comprehensive_hp',      performed_by_srna: false, validation_method: 'in_chart' },
+  ]);
+  const [assessmentCounts, setAssessmentCounts] = React.useState<Record<string, number>>({
+    preanesthetic_initial: anesthesiaOnly ? 0 : 1,
+    postanesthetic:        0,
+    comprehensive_hp:      0,
+  });
 
   // Show a verification banner when the modal opens with a pre-selected procedure
   const [verifyDismissed, setVerifyDismissed] = React.useState(false);
@@ -926,12 +924,17 @@ export function AddProcedureModal({
   const [loadingPreview, setLoadingPreview] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
 
-  // When caseCount changes, grow/shrink caseRows
+  // When caseCount changes, grow/shrink caseRows and keep preanesthetic count in sync
   const handleCaseCountChange = (n: number) => {
+    // If preanesthetic count was tracking caseCount (user hasn't diverged it), keep in sync
+    setAssessmentCounts((prev) => {
+      if ((prev.preanesthetic_initial ?? 0) === caseCount) {
+        return { ...prev, preanesthetic_initial: n };
+      }
+      return prev;
+    });
     setCaseCount(n);
     setCaseRows((prev) => makeCaseRows(n, prev));
-    // Skills are no longer capped by case count — multiple instances of a skill
-    // can be logged per case (e.g. 3 A-lines in 1 case), so we leave counts as-is.
   };
 
   const patchCaseRow = (i: number, patch: Partial<CaseRow>) =>
@@ -1112,7 +1115,10 @@ export function AddProcedureModal({
             performed_by_srna: skillCounts[def.skill_code]?.count > 0,
             successful: def.requires_success ? skillCounts[def.skill_code]?.successCount > 0 : undefined,
           })),
-          assessments,
+          assessments: assessments.map((a) => ({
+            ...a,
+            performed_by_srna: (assessmentCounts[a.assessment_type] ?? 0) > 0,
+          })),
           general_induction_independent: false,
           emergence_performed: false,
         };
@@ -1167,6 +1173,13 @@ export function AddProcedureModal({
             return entries;
           });
 
+          // Each case row gets the assessment marked as performed if its index falls
+          // within the count (e.g. count=2 out of 3 cases → rows 0 and 1 get it).
+          const assessmentsForRow = assessments.map((a) => ({
+            ...a,
+            performed_by_srna: rowIdx < (assessmentCounts[a.assessment_type] ?? 0),
+          }));
+
           await onSubmit({
             ...basePayload,
             episode: {
@@ -1175,7 +1188,7 @@ export function AddProcedureModal({
               emergency: row.emergency,
               patient_age_group: row.patient_age_group,
               skills,
-              assessments,
+              assessments: assessmentsForRow,
               general_induction_independent: row.general_induction_independent,
               emergence_performed: row.emergence_performed,
               pain_management_encounter: painManagementCount > 0,
@@ -1729,35 +1742,47 @@ export function AddProcedureModal({
             <div className="coa-section-card">
               <div className="coa-section-header">
                 <span>Patient Assessments</span>
-                <span className="badge">{assessments.filter((a) => a.performed_by_srna).length} performed</span>
+                <span className="badge">
+                  {Object.values(assessmentCounts).reduce((s, v) => s + v, 0)} performed
+                </span>
               </div>
               <div className="coa-list-grid" style={{ padding: '10px 12px' }}>
-                {assessments.map((a, i) => (
-                  <div key={`${a.assessment_type}-${i}`} className="assessment-row">
-                    <div className="assessment-row__name">
-                      {a.assessment_type === 'preanesthetic_initial' ? 'Pre-anesthetic Assessment'
-                        : a.assessment_type === 'postanesthetic' ? 'Post-anesthetic Assessment'
-                        : 'Comprehensive H&P'}
-                      <InfoTooltip coaKey={ASSESSMENT_TO_COA_KEY[a.assessment_type]} />
+                {assessments.map((a, i) => {
+                  const count = assessmentCounts[a.assessment_type] ?? 0;
+                  const label = a.assessment_type === 'preanesthetic_initial' ? 'Pre-anesthetic Assessment'
+                    : a.assessment_type === 'postanesthetic' ? 'Post-anesthetic Assessment'
+                    : 'Comprehensive H&P';
+                  return (
+                    <div key={`${a.assessment_type}-${i}`} className="assessment-row">
+                      <div className="assessment-row__name">
+                        {label}
+                        <InfoTooltip coaKey={ASSESSMENT_TO_COA_KEY[a.assessment_type]} />
+                      </div>
+                      <div className="assessment-row__controls">
+                        <div className="multi-stepper multi-stepper--sm">
+                          <button type="button" className="multi-stepper__btn"
+                            onClick={() => setAssessmentCounts((prev) => ({ ...prev, [a.assessment_type]: Math.max(0, count - 1) }))}
+                            disabled={count <= 0}>−</button>
+                          <span className="multi-stepper__val">{count}</span>
+                          <button type="button" className="multi-stepper__btn"
+                            onClick={() => setAssessmentCounts((prev) => ({ ...prev, [a.assessment_type]: Math.min(anesthesiaOnly ? 20 : caseCount, count + 1) }))}
+                            disabled={count >= (anesthesiaOnly ? 20 : caseCount)}>+</button>
+                        </div>
+                        {!anesthesiaOnly && (
+                          <span className="assessment-row__of">of {caseCount}</span>
+                        )}
+                      </div>
+                      <select
+                        value={a.validation_method}
+                        onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, validation_method: e.target.value as EpisodeAssessmentSelection['validation_method'] } : x))}
+                      >
+                        <option value="in_chart">In Chart</option>
+                        <option value="case_log_only">Case Log Only</option>
+                        <option value="telephone">Telephone</option>
+                      </select>
                     </div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={a.performed_by_srna}
-                        onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, performed_by_srna: e.target.checked } : x))}
-                      />
-                      Performed
-                    </label>
-                    <select
-                      value={a.validation_method}
-                      onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, validation_method: e.target.value as EpisodeAssessmentSelection['validation_method'] } : x))}
-                    >
-                      <option value="in_chart">In Chart</option>
-                      <option value="case_log_only">Case Log Only</option>
-                      <option value="telephone">Telephone</option>
-                    </select>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

@@ -872,9 +872,9 @@ export function AddProcedureModal({
   // ── Skill counters ──
   const [skillCounts, setSkillCounts] = React.useState<SkillCounts>(makeSkillCounts);
 
-  // ── Collapsible skill groups (Airway open by default, others closed) ──
+  // ── Collapsible skill groups (Airway + OB/Pain Rounds open by default) ──
   const [expandedSkillGroups, setExpandedSkillGroups] = React.useState<Set<string>>(
-    () => new Set(['Airway'])
+    () => new Set(['Airway', 'OB / Pain Rounds'])
   );
   const toggleSkillGroup = (name: string) =>
     setExpandedSkillGroups((prev) => {
@@ -1755,20 +1755,20 @@ export function AddProcedureModal({
                   );
                 })}
 
-                {/* ── Clinical Encounters (independent encounter counts) ── */}
+                {/* ── OB / Pain Rounds (independent encounter counts) ── */}
                 {(() => {
-                  const encGroupOpen = expandedSkillGroups.has('Clinical Encounters');
+                  const encGroupOpen = expandedSkillGroups.has('OB / Pain Rounds');
                   const encActiveCount = (painManagementCount > 0 ? 1 : 0) + (obAnalgesiaCount > 0 ? 1 : 0);
                   return (
                     <div className="skill-group">
                       <button
                         type="button"
                         className="skill-group__toggle"
-                        onClick={() => toggleSkillGroup('Clinical Encounters')}
+                        onClick={() => toggleSkillGroup('OB / Pain Rounds')}
                         aria-expanded={encGroupOpen}
                       >
                         <span className="skill-group__toggle-chevron">{encGroupOpen ? '▾' : '▸'}</span>
-                        <span className="skill-group__toggle-label">Clinical Encounters</span>
+                        <span className="skill-group__toggle-label">OB / Pain Rounds</span>
                         {encActiveCount > 0 && (
                           <span className="skill-group__toggle-badge">{encActiveCount}</span>
                         )}

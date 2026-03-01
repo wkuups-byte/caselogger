@@ -1816,17 +1816,29 @@ export function AddProcedureModal({
 
         {/* ── Footer ── */}
         <div className="coa-modal-footer">
-          <button type="button" className="coa-btn coa-btn--ghost" onClick={onCancel}>Cancel</button>
-          <button
-            type="button"
-            className="coa-btn coa-btn--primary"
-            onClick={submit}
-            disabled={!primaryProcedureId || saving}
-          >
-            {saving
-              ? (anesthesiaOnly ? 'Saving entry…' : `Saving ${caseCount} case${caseCount !== 1 ? 's' : ''}…`)
-              : (anesthesiaOnly ? 'Save Entry' : `Save ${caseCount} Case${caseCount !== 1 ? 's' : ''}`)}
-          </button>
+          {!anesthesiaOnly && (
+            <div className="coa-modal-footer__count">
+              <span className="coa-modal-footer__count-label">Cases</span>
+              <div className="multi-stepper multi-stepper--sm">
+                <button type="button" className="multi-stepper__btn" onClick={() => handleCaseCountChange(Math.max(1, caseCount - 1))} disabled={caseCount <= 1}>−</button>
+                <span className="multi-stepper__val">{caseCount}</span>
+                <button type="button" className="multi-stepper__btn" onClick={() => handleCaseCountChange(Math.min(20, caseCount + 1))} disabled={caseCount >= 20}>+</button>
+              </div>
+            </div>
+          )}
+          <div className="coa-modal-footer__actions">
+            <button type="button" className="coa-btn coa-btn--ghost" onClick={onCancel}>Cancel</button>
+            <button
+              type="button"
+              className="coa-btn coa-btn--primary"
+              onClick={submit}
+              disabled={!primaryProcedureId || saving}
+            >
+              {saving
+                ? (anesthesiaOnly ? 'Saving entry…' : `Saving ${caseCount} case${caseCount !== 1 ? 's' : ''}…`)
+                : (anesthesiaOnly ? 'Save Entry' : `Save ${caseCount} Case${caseCount !== 1 ? 's' : ''}`)}
+            </button>
+          </div>
         </div>
 
       </div>

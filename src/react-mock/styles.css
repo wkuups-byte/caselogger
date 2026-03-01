@@ -1409,12 +1409,39 @@ input[type='checkbox'] {
 /* ─── Modal Footer ────────────────────────────────────────────────────────── */
 .coa-modal-footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   padding: 14px 16px;
   background: var(--syn-surface);
   border-top: 1px solid var(--syn-border);
   flex-shrink: 0;
+}
+.coa-modal-footer__count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coa-modal-footer__count-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--syn-text-muted);
+}
+.coa-modal-footer__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.multi-stepper--sm .multi-stepper__btn {
+  width: 32px; height: 32px;
+  font-size: 17px;
+}
+.multi-stepper--sm .multi-stepper__val {
+  min-width: 32px;
+  font-size: 15px;
+  line-height: 32px;
 }
 .coa-btn {
   border-radius: var(--syn-radius-sm);

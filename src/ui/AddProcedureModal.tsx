@@ -948,6 +948,18 @@ export function AddProcedureModal({
   React.useEffect(() => { if (initialQuery !== undefined) setQuery(initialQuery); }, [initialQuery]);
   React.useEffect(() => { if (initialPrimaryProcedureId !== undefined) setPrimaryProcedureId(initialPrimaryProcedureId); }, [initialPrimaryProcedureId]);
 
+  // Procedures that default to Regional anesthesia
+  const REGIONAL_DEFAULT_PROCEDURES = new Set([
+    'OBSTETRIC_001', // Cesarean Delivery – Primary
+    'OBSTETRIC_002', // Cesarean Delivery – Repeat
+    'OBSTETRIC_003', // Cesarean Hysterectomy
+  ]);
+  React.useEffect(() => {
+    if (initialPrimaryProcedureId && REGIONAL_DEFAULT_PROCEDURES.has(initialPrimaryProcedureId)) {
+      setAnesthesiaType('regional');
+    }
+  }, [initialPrimaryProcedureId]);
+
   const visibleProcedures = React.useMemo(() => {
     const raw = query.trim();
     if (!raw) return procedureOptions.slice(0, 40);

@@ -410,8 +410,8 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     group: 'Regional',
     skills: [
-      { skill_code: 'regional_spinal',   label: 'Spinal' },
-      { skill_code: 'regional_epidural', label: 'Epidural' },
+      { skill_code: 'regional_spinal',   label: 'Spinal',   requires_success: true },
+      { skill_code: 'regional_epidural', label: 'Epidural', requires_success: true },
 
       // ── Upper Extremity ─────────────────────────────────────────────────────
       { skill_code: 'regional_pnb_upper', label: 'Upper Extremity PNB', isParent: true },
@@ -1318,63 +1318,66 @@ export function AddProcedureModal({
 
                   {/* ── Regional technique quick-picker ── */}
                   {anesthesiaType === 'regional' && (() => {
-                    const spinalCount  = skillCounts['regional_spinal']?.count  ?? 0;
-                    const epidCount    = skillCounts['regional_epidural']?.count ?? 0;
-                    const spinalActive = spinalCount > 0;
-                    const epidActive   = epidCount   > 0;
-                    const cseActive    = spinalActive && epidActive;
-
                     const openRegional = () =>
                       setExpandedSkillGroups((prev) => new Set([...prev, 'Regional']));
 
-                    const pickSpinal = () => {
-                      patchSkill('regional_spinal', { count: Math.max(1, spinalCount) });
-                      openRegional();
-                    };
-                    const pickEpidural = () => {
-                      patchSkill('regional_epidural', { count: Math.max(1, epidCount) });
-                      openRegional();
-                    };
-                    const pickCSE = () => {
-                      patchSkill('regional_spinal',   { count: Math.max(1, spinalCount) });
-                      patchSkill('regional_epidural',  { count: Math.max(1, epidCount)  });
-                      openRegional();
-                    };
+                    const techniques: Array<{
+                      code: string; successCode: string; label: string;
+                    }> = [
+                      { code: 'regional_spinal',   successCode: 'regional_spinal',   label: 'Spinal'   },
+                      { code: 'regional_epidural', successCode: 'regional_epidural', label: 'Epidural' },
+                    ];
 
                     return (
                       <div className="regional-technique-picker">
-                        <span className="regional-technique-picker__label">Which technique?</span>
-                        <div className="regional-technique-picker__pills">
-                          <button type="button"
-                            className={`regional-pill${spinalActive && !cseActive ? ' regional-pill--active' : ''}`}
-                            onClick={pickSpinal}>
-                            Spinal
-                          </button>
-                          <button type="button"
-                            className={`regional-pill${epidActive && !cseActive ? ' regional-pill--active' : ''}`}
-                            onClick={pickEpidural}>
-                            Epidural
-                          </button>
-                          <button type="button"
-                            className={`regional-pill${cseActive ? ' regional-pill--active' : ''}`}
-                            onClick={pickCSE}>
-                            CSE
-                          </button>
-                          <button type="button"
-                            className="regional-pill regional-pill--neutral"
-                            onClick={openRegional}>
-                            Other ↓
-                          </button>
+                        <div className="regional-technique-picker__header">
+                          <span className="regional-technique-picker__label">Which technique?</span>
+                          <button type="button" className="regional-pill regional-pill--neutral" onClick={openRegional}>Other ↓</button>
                         </div>
-                        {(spinalActive || epidActive) && (
-                          <p className="regional-technique-picker__hint">
-                            {cseActive
-                              ? 'Combined Spinal-Epidural — both counted. Adjust quantities in Regional ↓'
-                              : spinalActive
-                                ? 'Spinal logged. Fine-tune in Regional ↓'
-                                : 'Epidural logged. Fine-tune in Regional ↓'}
-                          </p>
-                        )}
+                        <div className="regional-technique-picker__rows">
+                          {techniques.map(({ code, label }) => {
+                            const sc = skillCounts[code] ?? { count: 0, successCount: 0 };
+                            const max = 20;
+                            return (
+                              <div key={code} className={`regional-technique-row${sc.count > 0 ? ' regional-technique-row--active' : ''}`}>
+                                <span className="regional-technique-row__label">{label}</span>
+                                <div className="regional-technique-row__counters">
+                                  <div className="regional-technique-row__counter-group">
+                                    <span className="regional-technique-row__counter-label">Attempts</span>
+                                    <div className="multi-stepper multi-stepper--sm">
+                                      <button type="button" className="multi-stepper__btn"
+                                        onClick={() => {
+                                          const next = Math.max(0, sc.count - 1);
+                                          patchSkill(code, { count: next, successCount: Math.min(sc.successCount, next) });
+                                          if (next > 0) openRegional();
+                                        }}
+                                        disabled={sc.count <= 0}>−</button>
+                                      <span className="multi-stepper__val">{sc.count}</span>
+                                      <button type="button" className="multi-stepper__btn"
+                                        onClick={() => {
+                                          patchSkill(code, { count: Math.min(max, sc.count + 1) });
+                                          openRegional();
+                                        }}
+                                        disabled={sc.count >= max}>+</button>
+                                    </div>
+                                  </div>
+                                  <div className="regional-technique-row__counter-group">
+                                    <span className="regional-technique-row__counter-label">Successful</span>
+                                    <div className="multi-stepper multi-stepper--sm">
+                                      <button type="button" className="multi-stepper__btn"
+                                        onClick={() => patchSkill(code, { successCount: Math.max(0, sc.successCount - 1) })}
+                                        disabled={sc.successCount <= 0}>−</button>
+                                      <span className="multi-stepper__val">{sc.successCount}</span>
+                                      <button type="button" className="multi-stepper__btn"
+                                        onClick={() => patchSkill(code, { successCount: Math.min(sc.count, sc.successCount + 1) })}
+                                        disabled={sc.successCount >= sc.count}>+</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })()}

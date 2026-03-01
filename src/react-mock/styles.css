@@ -650,6 +650,11 @@ body {
   border-radius: var(--syn-radius-sm);
   margin-top: 4px;
 }
+.regional-technique-picker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .regional-technique-picker__label {
   font-size: 11px;
   font-weight: 700;
@@ -657,31 +662,63 @@ body {
   letter-spacing: 0.06em;
   color: #6d28d9;
 }
-.regional-technique-picker__pills {
+.regional-technique-picker__rows {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+}
+.regional-technique-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  background: white;
+  border: 1.5px solid #ddd6fe;
+  border-radius: var(--syn-radius-sm);
+  transition: border-color .15s, background .15s;
+}
+.regional-technique-row--active {
+  border-color: #7c3aed;
+  background: #faf5ff;
+}
+.regional-technique-row__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #5b21b6;
+  min-width: 60px;
+}
+.regional-technique-row__counters {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.regional-technique-row__counter-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.regional-technique-row__counter-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c3aed;
 }
 .regional-pill {
-  padding: 7px 18px;
+  padding: 5px 14px;
   border-radius: 99px;
   border: 2px solid #c4b5fd;
   background: white;
   color: #5b21b6;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+  transition: background .12s, border-color .12s, color .12s;
   font-family: inherit;
 }
 .regional-pill:hover { background: #ede9fe; border-color: #7c3aed; }
-.regional-pill--active {
-  background: #7c3aed;
-  border-color: #7c3aed;
-  color: white;
-  box-shadow: 0 2px 8px rgba(124,58,237,.35);
-}
-.regional-pill--active:hover { background: #6d28d9; border-color: #6d28d9; }
 .regional-pill--neutral {
   background: transparent;
   border-color: #ddd6fe;
@@ -689,14 +726,9 @@ body {
   font-weight: 600;
 }
 .regional-pill--neutral:hover { background: #ede9fe; }
-.regional-technique-picker__hint {
-  font-size: 11px;
-  color: #6d28d9;
-  margin: 0;
-  font-style: italic;
-}
 @media (max-width: 480px) {
-  .regional-pill { padding: 6px 14px; font-size: 12px; }
+  .regional-technique-row__counters { gap: 8px; }
+  .regional-technique-row__label { font-size: 12px; min-width: 50px; }
 }
 
 /* ─── Label row (label + tooltip) ────────────────────────────────────────── */

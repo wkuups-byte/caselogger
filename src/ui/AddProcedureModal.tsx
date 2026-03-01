@@ -926,7 +926,7 @@ export function AddProcedureModal({
   const [loadingPreview, setLoadingPreview] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
 
-  // When caseCount changes, grow/shrink caseRows and keep preanesthetic count in sync
+  // When caseCount changes, grow/shrink caseRows and keep preanesthetic + regional management in sync
   const handleCaseCountChange = (n: number) => {
     // If preanesthetic count was tracking caseCount (user hasn't diverged it), keep in sync
     setAssessmentCounts((prev) => {
@@ -935,6 +935,16 @@ export function AddProcedureModal({
       }
       return prev;
     });
+    // If regional_management was tracking caseCount, keep in sync
+    if (anesthesiaType === 'regional') {
+      setSkillCounts((prev) => {
+        const existing = prev['regional_management']?.count ?? 0;
+        if (existing === caseCount) {
+          return { ...prev, regional_management: { ...prev['regional_management'], count: n, successCount: 0 } };
+        }
+        return prev;
+      });
+    }
     setCaseCount(n);
     setCaseRows((prev) => makeCaseRows(n, prev));
   };
@@ -964,6 +974,19 @@ export function AddProcedureModal({
       setAnesthesiaType('regional');
     }
   }, [initialPrimaryProcedureId]);
+
+  // When anesthesia type switches to Regional, default regional_management to caseCount
+  React.useEffect(() => {
+    if (anesthesiaType === 'regional') {
+      setSkillCounts((prev) => {
+        const existing = prev['regional_management']?.count ?? 0;
+        if (existing === 0) {
+          return { ...prev, regional_management: { ...prev['regional_management'], count: caseCount, successCount: 0 } };
+        }
+        return prev;
+      });
+    }
+  }, [anesthesiaType]);
 
   const visibleProcedures = React.useMemo(() => {
     const raw = query.trim();
@@ -1381,6 +1404,32 @@ export function AddProcedureModal({
                             );
                           })}
                         </div>
+
+                        {/* ── Regional Management ── */}
+                        {(() => {
+                          const mgmt = skillCounts['regional_management'] ?? { count: 0, successCount: 0 };
+                          return (
+                            <div className={`regional-technique-row regional-technique-row--management${mgmt.count > 0 ? ' regional-technique-row--active' : ''}`}>
+                              <div className="regional-technique-row__label-group">
+                                <span className="regional-technique-row__label">Managed Case</span>
+                                <span className="regional-technique-row__sublabel">counts toward regional mgmt (req. 35)</span>
+                              </div>
+                              <div className="regional-technique-row__counters">
+                                <div className="multi-stepper multi-stepper--sm">
+                                  <button type="button" className="multi-stepper__btn"
+                                    onClick={() => patchSkill('regional_management', { count: Math.max(0, mgmt.count - 1) })}
+                                    disabled={mgmt.count <= 0}>−</button>
+                                  <span className="multi-stepper__val">{mgmt.count}</span>
+                                  <button type="button" className="multi-stepper__btn"
+                                    onClick={() => patchSkill('regional_management', { count: Math.min(20, mgmt.count + 1) })}>+</button>
+                                </div>
+                                {!anesthesiaOnly && (
+                                  <span className="assessment-row__of">of {caseCount}</span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </div>
                     );
                   })()}

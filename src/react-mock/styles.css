@@ -688,6 +688,25 @@ body {
   color: #5b21b6;
   min-width: 60px;
 }
+.regional-technique-row__label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.regional-technique-row__sublabel {
+  font-size: 10px;
+  color: #7c3aed;
+  opacity: 0.75;
+}
+.regional-technique-row--management {
+  border-style: dashed;
+  margin-top: 4px;
+}
+.regional-technique-row--management.regional-technique-row--active {
+  border-style: solid;
+}
 .regional-technique-row__counters {
   display: flex;
   align-items: center;

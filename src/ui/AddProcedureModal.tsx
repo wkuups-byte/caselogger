@@ -412,6 +412,7 @@ const SKILL_GROUPS: SkillGroup[] = [
     skills: [
       { skill_code: 'regional_spinal',   label: 'Spinal',   requires_success: true },
       { skill_code: 'regional_epidural', label: 'Epidural', requires_success: true },
+      { skill_code: 'regional_cse',      label: 'CSE (Combined Spinal-Epidural)', requires_success: true },
 
       // ── Upper Extremity ─────────────────────────────────────────────────────
       { skill_code: 'regional_pnb_upper', label: 'Upper Extremity PNB', isParent: true },
@@ -513,6 +514,7 @@ const SKILL_TO_COA_KEY: Record<string, string> = {
   airway_chest_xray:           'coa.skill.airway.chest_xray',
   regional_spinal:                      'coa.skill.regional.spinal',
   regional_epidural:                    'coa.skill.regional.epidural',
+  regional_cse:                         'coa.skill.regional.spinal',
   // Upper extremity
   regional_pnb_upper:                       'coa.skill.regional.peripheral_anesthesia_upper',
   regional_pnb_upper_interscalene:          'coa.skill.regional.peripheral_anesthesia_upper',
@@ -1322,10 +1324,11 @@ export function AddProcedureModal({
                       setExpandedSkillGroups((prev) => new Set([...prev, 'Regional']));
 
                     const techniques: Array<{
-                      code: string; successCode: string; label: string;
+                      code: string; label: string;
                     }> = [
-                      { code: 'regional_spinal',   successCode: 'regional_spinal',   label: 'Spinal'   },
-                      { code: 'regional_epidural', successCode: 'regional_epidural', label: 'Epidural' },
+                      { code: 'regional_spinal',   label: 'Spinal'   },
+                      { code: 'regional_epidural', label: 'Epidural' },
+                      { code: 'regional_cse',      label: 'CSE'      },
                     ];
 
                     return (

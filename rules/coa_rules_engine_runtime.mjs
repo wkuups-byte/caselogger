@@ -91,7 +91,7 @@ function mapSkillsToRequirements(skills, skillMappings) {
       preview.push({ type: 'skill', skill_code: code, allowed: false, reason: 'PICC placement does not count as non-PICC CVC placement.' });
       continue;
     }
-    const successRequired = new Set(['arterial_line', 'cvc_nonpicc', 'picc', 'pac_placement', 'iv_peripheral', 'airway_intubation_oral', 'airway_intubation_nasal', 'airway_alt_intubation_video']);
+    const successRequired = new Set(['arterial_line', 'cvc_nonpicc', 'picc', 'pac_placement', 'iv_peripheral', 'airway_intubation_oral', 'airway_intubation_nasal', 'airway_alt_intubation_video', 'regional_spinal', 'regional_epidural', 'regional_cse']);
     if (successRequired.has(code) && !isTrue(s.successful)) {
       preview.push({ type: 'skill', skill_code: code, allowed: false, reason: 'Unsuccessful attempt does not count for this COA skill requirement.' });
       continue;

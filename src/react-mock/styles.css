@@ -892,6 +892,13 @@ input[type='checkbox'] {
   font-size: 12px; font-weight: 600; color: var(--syn-text-soft);
   min-width: 50px;
 }
+.anesthesia-time-row__fields {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.anesthesia-time-row__sep {
+  font-size: 18px; font-weight: 700; color: var(--syn-text-soft);
+  line-height: 1; margin: 0 -2px;
+}
 .anesthesia-time-row__stepper {
   display: flex; align-items: center; gap: 4px;
 }
@@ -900,7 +907,7 @@ input[type='checkbox'] {
   width: 36px; height: 36px; font-size: 18px;
 }
 .anesthesia-time-row__input {
-  width: 64px; height: 36px;
+  width: 48px; height: 36px;
   text-align: center; font-size: 15px; font-weight: 700;
   border: 1px solid var(--syn-border-dark); border-radius: var(--syn-radius-sm);
   background: white; color: var(--syn-text-dark);
@@ -915,8 +922,9 @@ input[type='checkbox'] {
 
 @media (max-width: 480px) {
   .anesthesia-time-row { gap: 8px; }
+  .anesthesia-time-row__fields { gap: 6px; }
   .anesthesia-time-row__stepper .multi-stepper__btn { width: 40px; height: 40px; }
-  .anesthesia-time-row__input { width: 70px; height: 40px; font-size: 16px; }
+  .anesthesia-time-row__input { width: 52px; height: 40px; font-size: 16px; }
 }
 
 /* ─── Skills section ──────────────────────────────────────────────────────── */

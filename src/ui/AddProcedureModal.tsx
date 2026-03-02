@@ -1384,42 +1384,89 @@ export function AddProcedureModal({
                   <div className="anesthesia-time-block">
                     <div className="anesthesia-time-block__header">
                       <span className="anesthesia-time-block__title">Anesthesia Time</span>
-                      <span className="anesthesia-time-block__hint">minutes · step 15</span>
+                      <span className="anesthesia-time-block__hint">hr · min (15-min steps)</span>
                     </div>
                     <div className="anesthesia-time-block__rows">
-                      {caseRows.map((row, i) => (
-                        <div key={i} className="anesthesia-time-row">
-                          {caseCount > 1 && (
-                            <span className="anesthesia-time-row__label">Case {i + 1}</span>
-                          )}
-                          <div className="anesthesia-time-row__stepper">
-                            <button
-                              type="button"
-                              className="multi-stepper__btn"
-                              onClick={() => patchCaseRow(i, { anesthesia_time_minutes: Math.max(0, row.anesthesia_time_minutes - 15) })}
-                              disabled={row.anesthesia_time_minutes <= 0}
-                            >−</button>
-                            <input
-                              type="number"
-                              className="anesthesia-time-row__input"
-                              min={0}
-                              step={15}
-                              value={row.anesthesia_time_minutes || ''}
-                              placeholder="0"
-                              onChange={(e) => {
-                                const v = e.target.value === '' ? 0 : Math.max(0, Math.round(Number(e.target.value)));
-                                patchCaseRow(i, { anesthesia_time_minutes: v });
-                              }}
-                            />
-                            <button
-                              type="button"
-                              className="multi-stepper__btn"
-                              onClick={() => patchCaseRow(i, { anesthesia_time_minutes: row.anesthesia_time_minutes + 15 })}
-                            >+</button>
-                            <span className="anesthesia-time-row__unit">min</span>
+                      {caseRows.map((row, i) => {
+                        const totalMins = row.anesthesia_time_minutes;
+                        const hrs = Math.floor(totalMins / 60);
+                        const mins = totalMins % 60;
+                        return (
+                          <div key={i} className="anesthesia-time-row">
+                            {caseCount > 1 && (
+                              <span className="anesthesia-time-row__label">Case {i + 1}</span>
+                            )}
+                            <div className="anesthesia-time-row__fields">
+                              {/* Hours */}
+                              <div className="anesthesia-time-row__stepper">
+                                <button
+                                  type="button"
+                                  className="multi-stepper__btn"
+                                  onClick={() => patchCaseRow(i, { anesthesia_time_minutes: Math.max(0, (hrs - 1) * 60 + mins) })}
+                                  disabled={hrs <= 0}
+                                >−</button>
+                                <input
+                                  type="number"
+                                  className="anesthesia-time-row__input"
+                                  min={0}
+                                  step={1}
+                                  value={hrs || ''}
+                                  placeholder="0"
+                                  onChange={(e) => {
+                                    const v = e.target.value === '' ? 0 : Math.max(0, Math.round(Number(e.target.value)));
+                                    patchCaseRow(i, { anesthesia_time_minutes: v * 60 + mins });
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className="multi-stepper__btn"
+                                  onClick={() => patchCaseRow(i, { anesthesia_time_minutes: (hrs + 1) * 60 + mins })}
+                                >+</button>
+                                <span className="anesthesia-time-row__unit">hr</span>
+                              </div>
+                              <span className="anesthesia-time-row__sep">:</span>
+                              {/* Minutes */}
+                              <div className="anesthesia-time-row__stepper">
+                                <button
+                                  type="button"
+                                  className="multi-stepper__btn"
+                                  onClick={() => {
+                                    if (mins === 0) {
+                                      if (hrs > 0) patchCaseRow(i, { anesthesia_time_minutes: (hrs - 1) * 60 + 45 });
+                                    } else {
+                                      patchCaseRow(i, { anesthesia_time_minutes: hrs * 60 + (mins - 15) });
+                                    }
+                                  }}
+                                  disabled={totalMins < 15}
+                                >−</button>
+                                <input
+                                  type="number"
+                                  className="anesthesia-time-row__input"
+                                  min={0}
+                                  max={59}
+                                  step={15}
+                                  value={mins || ''}
+                                  placeholder="00"
+                                  onChange={(e) => {
+                                    const v = e.target.value === '' ? 0 : Math.min(59, Math.max(0, Math.round(Number(e.target.value))));
+                                    patchCaseRow(i, { anesthesia_time_minutes: hrs * 60 + v });
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className="multi-stepper__btn"
+                                  onClick={() => {
+                                    const newMins = (mins + 15) % 60;
+                                    const extraHr = mins + 15 >= 60 ? 1 : 0;
+                                    patchCaseRow(i, { anesthesia_time_minutes: (hrs + extraHr) * 60 + newMins });
+                                  }}
+                                >+</button>
+                                <span className="anesthesia-time-row__unit">min</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -1640,7 +1687,11 @@ export function AddProcedureModal({
                     <span key={i} className="per-case-pill">
                       #{i + 1} ASA {row.asa_class ?? '?'} · {AGE_OPTIONS.find((a) => a.value === row.patient_age_group)?.label ?? row.patient_age_group}
                       {row.emergency ? ' · 🚨' : ''}
-                      {row.anesthesia_time_minutes > 0 ? ` · ${row.anesthesia_time_minutes}m` : ''}
+                      {row.anesthesia_time_minutes > 0 ? (() => {
+                        const h = Math.floor(row.anesthesia_time_minutes / 60);
+                        const m = row.anesthesia_time_minutes % 60;
+                        return ` · ${[h ? `${h}h` : '', m ? `${m}m` : ''].filter(Boolean).join(' ')}`;
+                      })() : ''}
                     </span>
                   ))}
                 </div>

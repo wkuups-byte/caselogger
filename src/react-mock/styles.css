@@ -865,6 +865,60 @@ input[type='checkbox'] {
   font-size: 12px; font-weight: 600;
 }
 
+/* ─── Anesthesia Time per-case block ─────────────────────────────────────── */
+.anesthesia-time-block {
+  border-top: 1px solid var(--syn-border);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+.anesthesia-time-block__header {
+  display: flex; align-items: baseline; gap: 6px;
+  margin-bottom: 8px;
+}
+.anesthesia-time-block__title {
+  font-size: 12px; font-weight: 700; color: var(--syn-text-mid);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.anesthesia-time-block__hint {
+  font-size: 11px; color: var(--syn-text-soft);
+}
+.anesthesia-time-block__rows {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.anesthesia-time-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.anesthesia-time-row__label {
+  font-size: 12px; font-weight: 600; color: var(--syn-text-soft);
+  min-width: 50px;
+}
+.anesthesia-time-row__stepper {
+  display: flex; align-items: center; gap: 4px;
+}
+/* Reuse multi-stepper__btn style for the −/+ buttons */
+.anesthesia-time-row__stepper .multi-stepper__btn {
+  width: 36px; height: 36px; font-size: 18px;
+}
+.anesthesia-time-row__input {
+  width: 64px; height: 36px;
+  text-align: center; font-size: 15px; font-weight: 700;
+  border: 1px solid var(--syn-border-dark); border-radius: var(--syn-radius-sm);
+  background: white; color: var(--syn-text-dark);
+  -moz-appearance: textfield;
+}
+.anesthesia-time-row__input::-webkit-outer-spin-button,
+.anesthesia-time-row__input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.anesthesia-time-row__input:focus { outline: none; border-color: var(--syn-purple); }
+.anesthesia-time-row__unit {
+  font-size: 12px; font-weight: 600; color: var(--syn-text-soft);
+}
+
+@media (max-width: 480px) {
+  .anesthesia-time-row { gap: 8px; }
+  .anesthesia-time-row__stepper .multi-stepper__btn { width: 40px; height: 40px; }
+  .anesthesia-time-row__input { width: 70px; height: 40px; font-size: 16px; }
+}
+
 /* ─── Skills section ──────────────────────────────────────────────────────── */
 .coa-list-grid { display: grid; gap: 6px; }
 
@@ -1079,12 +1133,29 @@ input[type='checkbox'] {
 .skill-counter__val--active { color: var(--syn-purple); }
 .skill-counter__val--success { color: var(--syn-good); }
 .skill-counter__of { font-size: 11px; font-weight: 500; color: var(--syn-text-soft); }
+/* Wraps controls + the auto-note below, so the note sits under the counter */
+.skill-row__controls-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+/* Auto-note: shown below the counter on US-guided target rows when toggles have already
+   credited this skill — reminds students not to double-chart */
+.skill-row__auto-note {
+  font-size: 10px; font-weight: 600; color: #1e6fa5;
+  background: #e8f4fd; border: 1px solid #b3d8f0;
+  border-radius: 4px; padding: 2px 7px;
+  white-space: nowrap;
+}
 
 @media (max-width: 480px) {
-  .skill-row__controls { gap: 6px; }
-  .skill-counter__btn { width: 28px; height: 28px; font-size: 16px; }
-  .skill-counter__val { min-width: 32px; font-size: 13px; line-height: 28px; }
-  .skill-row--counter { gap: 8px; padding: 8px 8px; }
+  /* Stack "Performed" and "Successful" groups vertically so they never clip */
+  .skill-row__controls {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  /* Also stack the US-guided toggle below the counters */
+  .skill-row__us-toggle { align-self: flex-end; }
+  .skill-counter__btn { width: 32px; height: 32px; font-size: 17px; }
+  .skill-counter__val { min-width: 34px; font-size: 13px; line-height: 32px; }
+  .skill-row--counter { gap: 8px; padding: 8px 8px; align-items: flex-start; }
 }
 
 /* ─── Assessment rows ─────────────────────────────────────────────────────── */

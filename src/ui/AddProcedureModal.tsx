@@ -75,6 +75,8 @@ interface CaseRow {
   emergency: boolean;
   general_induction_independent: boolean;
   emergence_performed: boolean;
+  /** Anesthesia time in minutes — maps to COA actual anesthesia time */
+  anesthesia_time_minutes: number;
 }
 
 // ── Search alias map: common shorthand → terms present in display_name ───────
@@ -661,6 +663,7 @@ const DEFAULT_CASE_ROW: CaseRow = {
   emergency: false,
   general_induction_independent: false,
   emergence_performed: true,
+  anesthesia_time_minutes: 0,
 };
 
 function makeCaseRows(n: number, prev: CaseRow[]): CaseRow[] {
@@ -759,14 +762,17 @@ function SkillCounter({
   counts,
   onChange,
   coaKeyOverride,
+  autoCount = 0,
 }: {
   def: SkillDef;
   counts: { count: number; successCount: number; usGuided?: boolean };
   onChange: (patch: { count?: number; successCount?: number; usGuided?: boolean }) => void;
   /** Overrides SKILL_TO_COA_KEY lookup for tooltip — used by clinical encounter counters */
   coaKeyOverride?: string;
+  /** Credits automatically assigned from parent skill US-guided toggles */
+  autoCount?: number;
 }) {
-  const active = counts.count > 0;
+  const active = autoCount > 0 || counts.count > 0;
 
   return (
     <div className={`skill-row skill-row--counter${active ? ' skill-row--active' : ''}${def.isSubItem ? ' skill-row--sub' : ''}`}>
@@ -776,59 +782,67 @@ function SkillCounter({
         {def.requires_success && <span className="skill-row__success-tag">✓ success req'd</span>}
         <InfoTooltip coaKey={coaKeyOverride ?? SKILL_TO_COA_KEY[def.skill_code]} />
       </div>
-      <div className="skill-row__controls">
-        <div className="skill-counter-group">
-          <span className="skill-counter-label">Performed</span>
-          <div className="skill-counter">
-            <button
-              type="button"
-              className="skill-counter__btn"
-              onClick={() => onChange({ count: Math.max(0, counts.count - 1), successCount: Math.min(counts.successCount, Math.max(0, counts.count - 1)) })}
-              disabled={counts.count === 0}
-            >−</button>
-            <span className={`skill-counter__val${active ? ' skill-counter__val--active' : ''}`}>
-              {counts.count}
-            </span>
-            <button
-              type="button"
-              className="skill-counter__btn"
-              onClick={() => onChange({ count: counts.count + 1 })}
-            >+</button>
-          </div>
-        </div>
-
-        {def.requires_success && counts.count > 0 && (
+      <div className="skill-row__controls-wrap">
+        <div className="skill-row__controls">
           <div className="skill-counter-group">
-            <span className="skill-counter-label">Successful</span>
+            <span className="skill-counter-label">Performed</span>
             <div className="skill-counter">
               <button
                 type="button"
                 className="skill-counter__btn"
-                onClick={() => onChange({ successCount: Math.max(0, counts.successCount - 1) })}
-                disabled={counts.successCount === 0}
+                onClick={() => onChange({ count: Math.max(0, counts.count - 1), successCount: Math.min(counts.successCount, Math.max(0, counts.count - 1)) })}
+                disabled={counts.count === 0}
               >−</button>
-              <span className="skill-counter__val skill-counter__val--success">
-                {counts.successCount}<span className="skill-counter__of">/{counts.count}</span>
+              <span className={`skill-counter__val${counts.count > 0 ? ' skill-counter__val--active' : ''}`}>
+                {counts.count}
               </span>
               <button
                 type="button"
                 className="skill-counter__btn"
-                onClick={() => onChange({ successCount: Math.min(counts.count, counts.successCount + 1) })}
-                disabled={counts.successCount >= counts.count}
+                onClick={() => onChange({ count: counts.count + 1 })}
               >+</button>
             </div>
           </div>
-        )}
 
-        {def.usGuidedSkillCode && counts.count > 0 && (
-          <label className="skill-row__us-toggle">
-            <input
-              type="checkbox"
-              checked={counts.usGuided ?? false}
-              onChange={(e) => onChange({ usGuided: e.target.checked })}
-            />
-            <span className="skill-row__us-label">🔊 US guided</span>
-          </label>
+          {def.requires_success && counts.count > 0 && (
+            <div className="skill-counter-group">
+              <span className="skill-counter-label">Successful</span>
+              <div className="skill-counter">
+                <button
+                  type="button"
+                  className="skill-counter__btn"
+                  onClick={() => onChange({ successCount: Math.max(0, counts.successCount - 1) })}
+                  disabled={counts.successCount === 0}
+                >−</button>
+                <span className="skill-counter__val skill-counter__val--success">
+                  {counts.successCount}<span className="skill-counter__of">/{counts.count}</span>
+                </span>
+                <button
+                  type="button"
+                  className="skill-counter__btn"
+                  onClick={() => onChange({ successCount: Math.min(counts.count, counts.successCount + 1) })}
+                  disabled={counts.successCount >= counts.count}
+                >+</button>
+              </div>
+            </div>
+          )}
+
+          {def.usGuidedSkillCode && counts.count > 0 && (
+            <label className="skill-row__us-toggle">
+              <input
+                type="checkbox"
+                checked={counts.usGuided ?? false}
+                onChange={(e) => onChange({ usGuided: e.target.checked })}
+              />
+              <span className="skill-row__us-label">🔊 US guided</span>
+            </label>
+          )}
+        </div>
+
+        {autoCount > 0 && (
+          <div className="skill-row__auto-note">
+            🔊 {autoCount} already credited from block toggle{autoCount !== 1 ? 's' : ''} above — don't re-enter
+          </div>
         )}
       </div>
     </div>
@@ -952,8 +966,23 @@ export function AddProcedureModal({
   const patchCaseRow = (i: number, patch: Partial<CaseRow>) =>
     setCaseRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
-  const patchSkill = (code: string, patch: { count?: number; successCount?: number }) =>
+  const patchSkill = (code: string, patch: { count?: number; successCount?: number; usGuided?: boolean }) =>
     setSkillCounts((prev) => ({ ...prev, [code]: { ...prev[code], ...patch } }));
+
+  // Compute how many US-guided credits each target code (us_guided_regional / us_guided_vascular)
+  // receives automatically from parent skill toggles — used to drive the Ultrasound counter display.
+  const usGuidedAutoCount = React.useMemo(() => {
+    const result: Record<string, number> = {};
+    ALL_SKILL_DEFS.forEach((def) => {
+      if (def.usGuidedSkillCode) {
+        const sc = skillCounts[def.skill_code];
+        if (sc?.usGuided && sc.count > 0) {
+          result[def.usGuidedSkillCode] = (result[def.usGuidedSkillCode] ?? 0) + sc.count;
+        }
+      }
+    });
+    return result;
+  }, [skillCounts]);
 
   const toggleAnatomic = (val: AnatomicalCategory) =>
     setAnatomicOverrides((prev) =>
@@ -1023,6 +1052,15 @@ export function AddProcedureModal({
 
   // Preview uses first case row's values as representative
   const firstCase = caseRows[0] ?? DEFAULT_CASE_ROW;
+
+  // Build a representative assessment list for the preview — mark performed_by_srna=true
+  // for any assessment type where the count is at least 1, so the COA preview panel
+  // correctly reflects assessment credits (e.g. pre-anesthetic, post-anesthetic, H&P).
+  const previewAssessments = assessments.map((a) => ({
+    ...a,
+    performed_by_srna: (assessmentCounts[a.assessment_type] ?? 0) > 0,
+  }));
+
   // Expand skills to reflect actual counts: a skill performed N times is sent
   // as N separate entries so the preview ledger shows the correct total credit
   // (e.g., 2 spinals across 3 cases → +2, not +3 or +1).
@@ -1061,7 +1099,7 @@ export function AddProcedureModal({
         painManagementCount > 0 ||
         obAnalgesiaCount > 0 ||
         Object.values(skillCounts).some((s) => s.count > 0) ||
-        assessments.some((a) => a.performed_by_srna);
+        Object.values(assessmentCounts).some((c) => c > 0);
       if (!hasSelection) {
         setPreview({ ledgerRows: [], preview: [] });
         setLoadingPreview(false);
@@ -1086,7 +1124,7 @@ export function AddProcedureModal({
         emergency: firstCase.emergency,
         patient_age_group: firstCase.patient_age_group,
         skills: previewSkills,
-        assessments,
+        assessments: previewAssessments,
         general_induction_independent: firstCase.general_induction_independent,
         emergence_performed: firstCase.emergence_performed,
         pain_management_encounter: painManagementCount > 0,
@@ -1102,7 +1140,7 @@ export function AddProcedureModal({
     anesthesiaType, firstCase.asa_class, firstCase.emergency, firstCase.patient_age_group,
     firstCase.general_induction_independent, firstCase.emergence_performed,
     painManagementCount, obAnalgesiaCount,
-    skillCounts, assessments, anatomicOverrides, onPreviewRequest,
+    skillCounts, assessments, assessmentCounts, anatomicOverrides, onPreviewRequest,
   ]);
 
   const requirementCount = React.useMemo(
@@ -1212,6 +1250,7 @@ export function AddProcedureModal({
               asa_class: row.asa_class,
               emergency: row.emergency,
               patient_age_group: row.patient_age_group,
+              anesthesia_time_minutes: row.anesthesia_time_minutes > 0 ? row.anesthesia_time_minutes : undefined,
               skills,
               assessments: assessmentsForRow,
               general_induction_independent: row.general_induction_independent,
@@ -1339,6 +1378,49 @@ export function AddProcedureModal({
                         {ANESTHESIA_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </label>
+                  </div>
+
+                  {/* ── Anesthesia Time per case ── */}
+                  <div className="anesthesia-time-block">
+                    <div className="anesthesia-time-block__header">
+                      <span className="anesthesia-time-block__title">Anesthesia Time</span>
+                      <span className="anesthesia-time-block__hint">minutes · step 15</span>
+                    </div>
+                    <div className="anesthesia-time-block__rows">
+                      {caseRows.map((row, i) => (
+                        <div key={i} className="anesthesia-time-row">
+                          {caseCount > 1 && (
+                            <span className="anesthesia-time-row__label">Case {i + 1}</span>
+                          )}
+                          <div className="anesthesia-time-row__stepper">
+                            <button
+                              type="button"
+                              className="multi-stepper__btn"
+                              onClick={() => patchCaseRow(i, { anesthesia_time_minutes: Math.max(0, row.anesthesia_time_minutes - 15) })}
+                              disabled={row.anesthesia_time_minutes <= 0}
+                            >−</button>
+                            <input
+                              type="number"
+                              className="anesthesia-time-row__input"
+                              min={0}
+                              step={15}
+                              value={row.anesthesia_time_minutes || ''}
+                              placeholder="0"
+                              onChange={(e) => {
+                                const v = e.target.value === '' ? 0 : Math.max(0, Math.round(Number(e.target.value)));
+                                patchCaseRow(i, { anesthesia_time_minutes: v });
+                              }}
+                            />
+                            <button
+                              type="button"
+                              className="multi-stepper__btn"
+                              onClick={() => patchCaseRow(i, { anesthesia_time_minutes: row.anesthesia_time_minutes + 15 })}
+                            >+</button>
+                            <span className="anesthesia-time-row__unit">min</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* ── Regional technique quick-picker ── */}
@@ -1558,6 +1640,7 @@ export function AddProcedureModal({
                     <span key={i} className="per-case-pill">
                       #{i + 1} ASA {row.asa_class ?? '?'} · {AGE_OPTIONS.find((a) => a.value === row.patient_age_group)?.label ?? row.patient_age_group}
                       {row.emergency ? ' · 🚨' : ''}
+                      {row.anesthesia_time_minutes > 0 ? ` · ${row.anesthesia_time_minutes}m` : ''}
                     </span>
                   ))}
                 </div>
@@ -1698,7 +1781,9 @@ export function AddProcedureModal({
               <div style={{ padding: '10px 12px', display: 'grid', gap: 6 }}>
                 {SKILL_GROUPS.map((group) => {
                   const groupOpen = expandedSkillGroups.has(group.group);
-                  const groupActiveCount = group.skills.reduce((sum, s) => sum + (skillCounts[s.skill_code]?.count ?? 0), 0);
+                  // Include auto-credited US-guided counts in the group badge total
+                  const groupActiveCount = group.skills.reduce((sum, s) =>
+                    sum + (skillCounts[s.skill_code]?.count ?? 0) + (usGuidedAutoCount[s.skill_code] ?? 0), 0);
                   return (
                     <div key={group.group} className="skill-group">
                       <button
@@ -1748,6 +1833,7 @@ export function AddProcedureModal({
                             def={def}
                             counts={skillCounts[def.skill_code] ?? { count: 0, successCount: 0 }}
                             onChange={(patch) => patchSkill(def.skill_code, patch)}
+                            autoCount={usGuidedAutoCount[def.skill_code]}
                           />
                         );
                       })}

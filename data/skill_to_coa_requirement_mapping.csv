@@ -6,7 +6,7 @@ airway_sga_other,coa.skill.airway.supraglottic_total,performed_by_srna=true,Othe
 airway_intubation_oral,coa.skill.airway.tracheal_intubation_total,performed_by_srna=true and successful=true,Only successful tracheal intubation counts.
 airway_intubation_nasal,coa.skill.airway.tracheal_intubation_total,performed_by_srna=true and successful=true,Only successful tracheal intubation counts.
 airway_alt_intubation_video,coa.skill.airway.alt_intubation_total,performed_by_srna=true and successful=true,Alternative technique should also map to tracheal intubation if ETT placed.
-airway_endoscopic,coa.skill.airway.endoscopic_techniques,performed_by_srna=true and validation in clinical|simulated,"Simulation may satisfy part, not all."
+airway_endoscopic,coa.skill.airway.alt_intubation_endoscopic_total,performed_by_srna=true and validation in clinical|simulated,"Simulation may satisfy part, not all."
 airway_chest_xray,coa.skill.airway.chest_xray,performed_by_srna=true,Assessment of chest X-ray for perianesthetic implications.
 regional_spinal,coa.skill.regional.spinal,performed_by_srna=true,Counts only when personally performed.
 regional_spinal,coa.skill.regional.actual_administration_total,performed_by_srna=true,Spinal counts toward regional actual administration total.
@@ -155,3 +155,7 @@ regional_pnb_lower_adductor_canal,coa.skill.regional.actual_administration_total
 regional_pnb_upper_bier,coa.skill.regional.peripheral_block,performed_by_srna=true,Bier Block (IVRA) counts toward peripheral block total.
 regional_pnb_upper_bier,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,Bier Block (IVRA) – upper extremity anesthesia subcategory.
 regional_pnb_upper_bier,coa.skill.regional.actual_administration_total,performed_by_srna=true,Bier Block (IVRA) counts toward regional actual administration total.
+regional_pnb_upper_walant,coa.skill.regional.peripheral_block,performed_by_srna=true,WALANT (Wide Awake Local Anesthesia No Tourniquet) counts toward peripheral block total.
+regional_pnb_upper_walant,coa.skill.regional.peripheral_anesthesia_upper,performed_by_srna=true,WALANT – upper extremity anesthesia subcategory.
+regional_pnb_upper_walant,coa.skill.regional.actual_administration_total,performed_by_srna=true,WALANT counts toward regional actual administration total.
+advanced_hemodynamic_monitoring,coa.skill.advanced_hemodynamic_monitoring,performed_by_srna=true,Advanced minimally- and non-invasive hemodynamic monitoring (FloTrac/ClearSight/Esophageal Doppler/PiCCO/LiDCO).

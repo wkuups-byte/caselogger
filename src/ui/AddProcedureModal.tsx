@@ -494,9 +494,10 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     group: 'Ultrasound',
     skills: [
-      { skill_code: 'us_guided_regional', label: 'US-Guided Regional' },
-      { skill_code: 'us_guided_vascular', label: 'US-Guided Vascular' },
-      { skill_code: 'pocus',              label: 'POCUS' },
+      { skill_code: 'us_guided_regional',          label: 'US-Guided Regional' },
+      { skill_code: 'us_guided_vascular',          label: 'US-Guided Vascular' },
+      { skill_code: 'pocus',                       label: 'POCUS' },
+      { skill_code: 'advanced_hemodynamic_monitoring', label: 'Advanced Hemodynamic Monitoring' },
     ],
   },
 ];
@@ -582,9 +583,10 @@ const SKILL_TO_COA_KEY: Record<string, string> = {
   pac_placement:               'coa.skill.pac.placement',
   pac_monitoring:              'coa.skill.pac.monitoring',
   iv_peripheral:               'coa.skill.iv.placement',
-  us_guided_regional:          'coa.skill.ultrasound.guided_regional',
-  us_guided_vascular:          'coa.skill.ultrasound.guided_vascular',
-  pocus:                       'coa.skill.pocus',
+  us_guided_regional:               'coa.skill.ultrasound.guided_regional',
+  us_guided_vascular:               'coa.skill.ultrasound.guided_vascular',
+  pocus:                            'coa.skill.pocus',
+  advanced_hemodynamic_monitoring:  'coa.skill.advanced_hemodynamic_monitoring',
 };
 
 // ── Assessment type → COA requirement key ────────────────────────────────────

@@ -1212,6 +1212,13 @@ input[type='checkbox'] {
     grid-template-columns: 1fr auto minmax(130px, 170px);
   }
 }
+/* CXR row — no validation-method column, always 2-col, top border separator */
+.assessment-row--cxr {
+  grid-template-columns: 1fr auto !important;
+  border-top: 1.5px dashed var(--syn-border-dark) !important;
+  margin-top: 4px;
+  padding-top: 4px;
+}
 
 /* ─── Anatomical Category Picker ─────────────────────────────────────────── */
 .coa-hint-text {

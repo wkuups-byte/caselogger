@@ -406,7 +406,6 @@ const SKILL_GROUPS: SkillGroup[] = [
       { skill_code: 'airway_intubation_nasal',     label: 'Nasal Intubation',       requires_success: true },
       { skill_code: 'airway_alt_intubation_video', label: 'Video Laryngoscopy',     requires_success: true },
       { skill_code: 'airway_endoscopic',           label: 'Endoscopic / Fiberoptic' },
-      { skill_code: 'airway_chest_xray',           label: 'Chest X-Ray Assessment' },
     ],
   },
   {
@@ -502,7 +501,9 @@ const SKILL_GROUPS: SkillGroup[] = [
   },
 ];
 
-const ALL_SKILL_DEFS: SkillDef[] = SKILL_GROUPS.flatMap((g) => g.skills);
+// CXR is not in SKILL_GROUPS (it lives in the Assessments card) but must be in ALL_SKILL_DEFS for submission
+const CXR_SKILL_DEF: SkillDef = { skill_code: 'airway_chest_xray', label: 'Chest X-Ray Assessment' };
+const ALL_SKILL_DEFS: SkillDef[] = [...SKILL_GROUPS.flatMap((g) => g.skills), CXR_SKILL_DEF];
 
 // ── Skill code → COA requirement key (for guidance tooltips) ─────────────────
 const SKILL_TO_COA_KEY: Record<string, string> = {
@@ -1977,6 +1978,23 @@ export function AddProcedureModal({
                     </div>
                   );
                 })}
+                {/* ── CXR Interpretation (lives beside assessments, submitted as a skill) ── */}
+                <div className="assessment-row assessment-row--cxr">
+                  <div className="assessment-row__name">
+                    Chest X-Ray Assessment
+                    <InfoTooltip coaKey="coa.skill.airway.chest_xray" />
+                  </div>
+                  <div className="assessment-row__controls">
+                    <div className="multi-stepper multi-stepper--sm">
+                      <button type="button" className="multi-stepper__btn"
+                        onClick={() => patchSkill('airway_chest_xray', { count: Math.max(0, (skillCounts['airway_chest_xray']?.count ?? 0) - 1) })}
+                        disabled={(skillCounts['airway_chest_xray']?.count ?? 0) <= 0}>−</button>
+                      <span className="multi-stepper__val">{skillCounts['airway_chest_xray']?.count ?? 0}</span>
+                      <button type="button" className="multi-stepper__btn"
+                        onClick={() => patchSkill('airway_chest_xray', { count: (skillCounts['airway_chest_xray']?.count ?? 0) + 1 })}>+</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

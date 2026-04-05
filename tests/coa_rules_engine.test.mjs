@@ -270,3 +270,55 @@ test('regional skill without purpose_type credits totals only (backward compat)'
   assert.ok(!reqs.includes('coa.skill.regional.spinal_anesthesia'), 'should NOT credit anesthesia');
   assert.ok(!reqs.includes('coa.skill.regional.spinal_pain_mgmt'), 'should NOT credit pain mgmt');
 });
+
+test('comprehensive_hp simulated credits parent and simulated sub-key', () => {
+  const out = deriveCoaCredits({
+    episode: {
+      episode_id: 'ep-hp-sim',
+      student_id: 'stu1',
+      anesthesia_type: 'general',
+      asa_class: 2,
+      emergency: false,
+      patient_age_group: 'adult',
+      skills: [],
+      assessments: [
+        { assessment_type: 'comprehensive_hp', performed_by_srna: true, validation_method: 'simulated' },
+      ],
+    },
+    participation: { participation_type: 'primary' },
+    primaryProcedure: { primary_procedure_id: 'DIGESTIVE_001' },
+    primaryProcedureToCoaMap: { DIGESTIVE_001: ['coa.case.anatomic.intra_abdominal'] },
+    skillToRequirementMapping: skillMap,
+  });
+
+  const reqs = out.ledgerRows.map((r) => r.requirement_key);
+  assert.ok(reqs.includes('coa.assessment.comprehensive_hp'), 'should credit parent');
+  assert.ok(reqs.includes('coa.assessment.comprehensive_hp.simulated'), 'should credit simulated sub-key');
+  assert.ok(!reqs.includes('coa.assessment.comprehensive_hp.actual'), 'should NOT credit actual sub-key');
+});
+
+test('comprehensive_hp actual credits parent and actual sub-key', () => {
+  const out = deriveCoaCredits({
+    episode: {
+      episode_id: 'ep-hp-act',
+      student_id: 'stu1',
+      anesthesia_type: 'general',
+      asa_class: 2,
+      emergency: false,
+      patient_age_group: 'adult',
+      skills: [],
+      assessments: [
+        { assessment_type: 'comprehensive_hp', performed_by_srna: true, validation_method: 'clinical' },
+      ],
+    },
+    participation: { participation_type: 'primary' },
+    primaryProcedure: { primary_procedure_id: 'DIGESTIVE_001' },
+    primaryProcedureToCoaMap: { DIGESTIVE_001: ['coa.case.anatomic.intra_abdominal'] },
+    skillToRequirementMapping: skillMap,
+  });
+
+  const reqs = out.ledgerRows.map((r) => r.requirement_key);
+  assert.ok(reqs.includes('coa.assessment.comprehensive_hp'), 'should credit parent');
+  assert.ok(reqs.includes('coa.assessment.comprehensive_hp.actual'), 'should credit actual sub-key');
+  assert.ok(!reqs.includes('coa.assessment.comprehensive_hp.simulated'), 'should NOT credit simulated sub-key');
+});

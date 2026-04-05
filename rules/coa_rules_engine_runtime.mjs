@@ -154,6 +154,22 @@ function mapAssessmentsToRequirements(assessments) {
   const preview = [];
   const allowedMethods = new Set(['in_chart', 'case_log_only', 'telephone']);
   for (const a of assessments || []) {
+    // Comprehensive H&P uses 'clinical'/'simulated' instead of the standard assessment validation methods
+    if (a.assessment_type === 'comprehensive_hp') {
+      if (!isTrue(a.performed_by_srna)) {
+        preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: false, reason: 'Assessment does not count unless performed_by_srna=true.' });
+        continue;
+      }
+      rows.push({ requirement_key: 'coa.assessment.comprehensive_hp', increment: 1, rule_id: 'assessment:comprehensive_hp' });
+      const hpVm = norm(a.validation_method);
+      if (hpVm === 'simulated') {
+        rows.push({ requirement_key: 'coa.assessment.comprehensive_hp.simulated', increment: 1, rule_id: 'assessment:comprehensive_hp:simulated' });
+      } else if (hpVm === 'clinical') {
+        rows.push({ requirement_key: 'coa.assessment.comprehensive_hp.actual', increment: 1, rule_id: 'assessment:comprehensive_hp:clinical' });
+      }
+      preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: true, reason: 'Counts as a comprehensive history and physical.' });
+      continue;
+    }
     const method = norm(a.validation_method);
     if (!allowedMethods.has(method)) {
       preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: false, reason: 'Invalid validation method (use in_chart, case_log_only, or telephone).' });
@@ -169,9 +185,6 @@ function mapAssessmentsToRequirements(assessments) {
     } else if (a.assessment_type === 'postanesthetic') {
       rows.push({ requirement_key: 'coa.assessment.postanesthetic', increment: 1, rule_id: 'assessment:postanesthetic' });
       preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: true, reason: `Counts as postanesthetic assessment (validated via ${method}).` });
-    } else if (a.assessment_type === 'comprehensive_hp') {
-      rows.push({ requirement_key: 'coa.assessment.comprehensive_hp', increment: 1, rule_id: 'assessment:comprehensive_hp' });
-      preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: true, reason: 'Counts as a comprehensive history and physical.' });
     } else {
       preview.push({ type: 'assessment', assessment_type: a.assessment_type, allowed: false, reason: 'Assessment type is tracked but not mapped to a COA minimum.' });
     }

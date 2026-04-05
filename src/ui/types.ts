@@ -42,7 +42,7 @@ export interface EpisodeSkillSelection {
 }
 
 export interface EpisodeAssessmentSelection {
-  assessment_type: 'preanesthetic_initial' | 'postanesthetic';
+  assessment_type: 'preanesthetic_initial' | 'postanesthetic' | 'comprehensive_hp';
   performed_by_srna: boolean;
   validation_method: 'in_chart' | 'case_log_only' | 'telephone';
 }

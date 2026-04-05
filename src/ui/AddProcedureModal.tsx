@@ -2076,8 +2076,7 @@ export function AddProcedureModal({
                           <span className="assessment-row__of">of {caseCount}</span>
                         )}
                       </div>
-                      {a.assessment_type === 'comprehensive_hp' ? (
-                        (assessmentCounts['comprehensive_hp'] ?? 0) > 0 && (
+                      {a.assessment_type === 'comprehensive_hp' && (assessmentCounts['comprehensive_hp'] ?? 0) > 0 && (
                           <div className={`skill-pill-toggle${!comprehensiveHpMethod ? ' skill-pill-toggle--required' : ''}`}>
                             <button
                               type="button"
@@ -2092,16 +2091,6 @@ export function AddProcedureModal({
                               onClick={() => setComprehensiveHpMethod('simulated')}
                             >Simulated</button>
                           </div>
-                        )
-                      ) : (
-                        <select
-                          value={a.validation_method}
-                          onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, validation_method: e.target.value as EpisodeAssessmentSelection['validation_method'] } : x))}
-                        >
-                          <option value="in_chart">In Chart</option>
-                          <option value="case_log_only">Case Log Only</option>
-                          <option value="telephone">Telephone</option>
-                        </select>
                       )}
                     </div>
                   );

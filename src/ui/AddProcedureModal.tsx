@@ -999,6 +999,7 @@ export function AddProcedureModal({
     postanesthetic:        0,
     comprehensive_hp:      0,
   });
+  const [comprehensiveHpMethod, setComprehensiveHpMethod] = React.useState<'clinical' | 'simulated' | undefined>(undefined);
 
   // Show a verification banner when the modal opens with a pre-selected procedure
   const [verifyDismissed, setVerifyDismissed] = React.useState(false);
@@ -1228,8 +1229,36 @@ export function AddProcedureModal({
     [preview.ledgerRows],
   );
 
+  // ── Toggle validation ────────────────────────────────────────────────────────
+  function getMissingToggles(
+    skillCounts: SkillCounts,
+    comprehensiveHpMethod: 'clinical' | 'simulated' | undefined,
+    assessmentCounts: Record<string, number>,
+  ): string[] {
+    const missing: string[] = [];
+    for (const def of ALL_SKILL_DEFS) {
+      const sc = skillCounts[def.skill_code];
+      if (!sc || sc.count === 0) continue;
+      if (SIM_ELIGIBLE_SKILLS.has(def.skill_code) && !sc.validationMethod) {
+        missing.push(`Select Actual or Simulated for: ${def.label}`);
+      }
+      if (PURPOSE_ELIGIBLE_SKILLS.has(def.skill_code) && !sc.purposeType) {
+        missing.push(`Select Anesthesia or Pain Mgmt for: ${def.label}`);
+      }
+    }
+    if ((assessmentCounts['comprehensive_hp'] ?? 0) > 0 && !comprehensiveHpMethod) {
+      missing.push('Select Actual or Simulated for: Comprehensive H&P');
+    }
+    return missing;
+  }
+
   const submit = async () => {
     if (!primaryProcedureId || saving) return;
+    const toggleErrors = getMissingToggles(skillCounts, comprehensiveHpMethod, assessmentCounts);
+    if (toggleErrors.length > 0) {
+      alert(toggleErrors.join('\n'));
+      return;
+    }
     setSaving(true);
     try {
       // Fan out: submit one episode per case row
@@ -1303,6 +1332,8 @@ export function AddProcedureModal({
               performed_by_srna: true,
               successful: def.requires_success ? i < successCount : undefined,
               ultrasound_guided: sc.usGuided ? true : undefined,
+              validation_method: SIM_ELIGIBLE_SKILLS.has(def.skill_code) ? sc.validationMethod : undefined,
+              purpose_type: PURPOSE_ELIGIBLE_SKILLS.has(def.skill_code) ? sc.purposeType : undefined,
             }));
             // Auto-emit US-guided entries when the toggle is on
             if (sc.usGuided && def.usGuidedSkillCode) {

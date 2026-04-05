@@ -37,6 +37,7 @@ export interface EpisodeSkillSelection {
   performed_by_srna: boolean;
   successful?: boolean;
   validation_method?: 'clinical' | 'simulated';
+  purpose_type?: 'anesthesia' | 'pain_management';
   line_type?: string;
 }
 

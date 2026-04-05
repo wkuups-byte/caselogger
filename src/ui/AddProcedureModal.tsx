@@ -802,14 +802,14 @@ function SkillCounter({
   autoCount = 0,
 }: {
   def: SkillDef;
-  counts: { count: number; successCount: number; usGuided?: boolean };
-  onChange: (patch: { count?: number; successCount?: number; usGuided?: boolean }) => void;
-  /** Overrides SKILL_TO_COA_KEY lookup for tooltip — used by clinical encounter counters */
+  counts: { count: number; successCount: number; usGuided?: boolean; validationMethod?: 'clinical' | 'simulated'; purposeType?: 'anesthesia' | 'pain_management' };
+  onChange: (patch: { count?: number; successCount?: number; usGuided?: boolean; validationMethod?: 'clinical' | 'simulated' | undefined; purposeType?: 'anesthesia' | 'pain_management' | undefined }) => void;
   coaKeyOverride?: string;
-  /** Credits automatically assigned from parent skill US-guided toggles */
   autoCount?: number;
 }) {
   const active = autoCount > 0 || counts.count > 0;
+  const showSimToggle = SIM_ELIGIBLE_SKILLS.has(def.skill_code) && counts.count > 0;
+  const showPurposeToggle = PURPOSE_ELIGIBLE_SKILLS.has(def.skill_code) && counts.count > 0;
 
   return (
     <div className={`skill-row skill-row--counter${active ? ' skill-row--active' : ''}${def.isSubItem ? ' skill-row--sub' : ''}`}>
@@ -873,6 +873,40 @@ function SkillCounter({
               />
               <span className="skill-row__us-label">🔊 US guided</span>
             </label>
+          )}
+
+          {showSimToggle && (
+            <div className={`skill-pill-toggle${!counts.validationMethod ? ' skill-pill-toggle--required' : ''}`}>
+              <button
+                type="button"
+                data-pill="actual"
+                className={`skill-pill-toggle__btn${counts.validationMethod === 'clinical' ? ' skill-pill-toggle__btn--active' : ''}`}
+                onClick={() => onChange({ validationMethod: 'clinical' })}
+              >Actual</button>
+              <button
+                type="button"
+                data-pill="simulated"
+                className={`skill-pill-toggle__btn${counts.validationMethod === 'simulated' ? ' skill-pill-toggle__btn--active' : ''}`}
+                onClick={() => onChange({ validationMethod: 'simulated' })}
+              >Simulated</button>
+            </div>
+          )}
+
+          {showPurposeToggle && (
+            <div className={`skill-pill-toggle${!counts.purposeType ? ' skill-pill-toggle--required' : ''}`}>
+              <button
+                type="button"
+                data-pill="anesthesia"
+                className={`skill-pill-toggle__btn${counts.purposeType === 'anesthesia' ? ' skill-pill-toggle__btn--active' : ''}`}
+                onClick={() => onChange({ purposeType: 'anesthesia' })}
+              >Anesthesia</button>
+              <button
+                type="button"
+                data-pill="pain_mgmt"
+                className={`skill-pill-toggle__btn${counts.purposeType === 'pain_management' ? ' skill-pill-toggle__btn--active' : ''}`}
+                onClick={() => onChange({ purposeType: 'pain_management' })}
+              >Pain Mgmt</button>
+            </div>
           )}
         </div>
 

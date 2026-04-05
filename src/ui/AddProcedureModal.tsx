@@ -1352,6 +1352,7 @@ export function AddProcedureModal({
           const assessmentsForRow = assessments.map((a) => ({
             ...a,
             performed_by_srna: rowIdx < (assessmentCounts[a.assessment_type] ?? 0),
+            validation_method: a.assessment_type === 'comprehensive_hp' ? (comprehensiveHpMethod ?? 'clinical') : a.validation_method,
           }));
 
           await onSubmit({
@@ -2075,14 +2076,33 @@ export function AddProcedureModal({
                           <span className="assessment-row__of">of {caseCount}</span>
                         )}
                       </div>
-                      <select
-                        value={a.validation_method}
-                        onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, validation_method: e.target.value as EpisodeAssessmentSelection['validation_method'] } : x))}
-                      >
-                        <option value="in_chart">In Chart</option>
-                        <option value="case_log_only">Case Log Only</option>
-                        <option value="telephone">Telephone</option>
-                      </select>
+                      {a.assessment_type === 'comprehensive_hp' ? (
+                        (assessmentCounts['comprehensive_hp'] ?? 0) > 0 && (
+                          <div className={`skill-pill-toggle${!comprehensiveHpMethod ? ' skill-pill-toggle--required' : ''}`}>
+                            <button
+                              type="button"
+                              data-pill="actual"
+                              className={`skill-pill-toggle__btn${comprehensiveHpMethod === 'clinical' ? ' skill-pill-toggle__btn--active' : ''}`}
+                              onClick={() => setComprehensiveHpMethod('clinical')}
+                            >Actual</button>
+                            <button
+                              type="button"
+                              data-pill="simulated"
+                              className={`skill-pill-toggle__btn${comprehensiveHpMethod === 'simulated' ? ' skill-pill-toggle__btn--active' : ''}`}
+                              onClick={() => setComprehensiveHpMethod('simulated')}
+                            >Simulated</button>
+                          </div>
+                        )
+                      ) : (
+                        <select
+                          value={a.validation_method}
+                          onChange={(e) => setAssessments((prev) => prev.map((x, idx) => idx === i ? { ...x, validation_method: e.target.value as EpisodeAssessmentSelection['validation_method'] } : x))}
+                        >
+                          <option value="in_chart">In Chart</option>
+                          <option value="case_log_only">Case Log Only</option>
+                          <option value="telephone">Telephone</option>
+                        </select>
+                      )}
                     </div>
                   );
                 })}

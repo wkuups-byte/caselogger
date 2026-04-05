@@ -81,6 +81,26 @@ function mapSkillsToRequirements(skills, skillMappings) {
     bySkill.get(map.skill_code).push(map);
   }
 
+  // Lookup table: parent COA key → { actual sub-key, simulated sub-key }
+  const SIM_ACTUAL_SUB_KEYS = {
+    'coa.skill.cvc.nonpicc_placement':        { actual: 'coa.skill.cvc.nonpicc_actual',                  simulated: 'coa.skill.cvc.nonpicc_simulated' },
+    'coa.skill.picc.placement':               { actual: 'coa.skill.picc.actual',                         simulated: 'coa.skill.picc.simulated' },
+    'coa.skill.ultrasound.guided_regional':    { actual: 'coa.skill.ultrasound.guided_regional_actual',   simulated: 'coa.skill.ultrasound.guided_regional_simulated' },
+    'coa.skill.ultrasound.guided_vascular':    { actual: 'coa.skill.ultrasound.guided_vascular_actual',   simulated: 'coa.skill.ultrasound.guided_vascular_simulated' },
+    'coa.skill.pocus':                         { actual: 'coa.skill.pocus.actual',                        simulated: 'coa.skill.pocus.simulated' },
+    'coa.skill.airway.alt_intubation_endoscopic_total': { actual: 'coa.skill.airway.alt_intubation_endoscopic_actual', simulated: 'coa.skill.airway.alt_intubation_endoscopic_simulated' },
+  };
+
+  // Lookup table: parent COA key → { anesthesia sub-key, pain_management sub-key }
+  const PURPOSE_SUB_KEYS = {
+    'coa.skill.regional.spinal':                    { anesthesia: 'coa.skill.regional.spinal_anesthesia',              pain_management: 'coa.skill.regional.spinal_pain_mgmt' },
+    'coa.skill.regional.epidural':                  { anesthesia: 'coa.skill.regional.epidural_anesthesia',            pain_management: 'coa.skill.regional.epidural_pain_mgmt' },
+    'coa.skill.regional.peripheral_block':          { anesthesia: null,                                                pain_management: null },
+    'coa.skill.regional.peripheral_anesthesia_upper': { anesthesia: 'coa.skill.regional.peripheral_anesthesia_upper',  pain_management: 'coa.skill.regional.peripheral_pain_mgmt_upper' },
+    'coa.skill.regional.peripheral_anesthesia_lower': { anesthesia: 'coa.skill.regional.peripheral_anesthesia_lower',  pain_management: 'coa.skill.regional.peripheral_pain_mgmt_lower' },
+    'coa.skill.regional.other_total':               { anesthesia: 'coa.skill.regional.other_anesthesia',              pain_management: 'coa.skill.regional.other_pain_mgmt' },
+  };
+
   for (const s of skills || []) {
     const code = s.skill_code;
     if (!isTrue(s.performed_by_srna)) {
@@ -101,7 +121,28 @@ function mapSkillsToRequirements(skills, skillMappings) {
       preview.push({ type: 'skill', skill_code: code, allowed: false, reason: 'No COA mapping configured for skill code.' });
       continue;
     }
-    for (const map of maps) rows.push({ requirement_key: map.coa_requirement_key, increment: 1, rule_id: `skill:${code}` });
+
+    // Post existing parent-level credits
+    for (const map of maps) {
+      rows.push({ requirement_key: map.coa_requirement_key, increment: 1, rule_id: `skill:${code}` });
+
+      // Simulated/actual sub-key routing
+      const vm = norm(s.validation_method);
+      const simActual = SIM_ACTUAL_SUB_KEYS[map.coa_requirement_key];
+      if (simActual && (vm === 'simulated' || vm === 'clinical')) {
+        const subKey = vm === 'simulated' ? simActual.simulated : simActual.actual;
+        if (subKey) rows.push({ requirement_key: subKey, increment: 1, rule_id: `skill:${code}:${vm}` });
+      }
+
+      // Purpose sub-key routing
+      const pt = norm(s.purpose_type);
+      const purpose = PURPOSE_SUB_KEYS[map.coa_requirement_key];
+      if (purpose && (pt === 'anesthesia' || pt === 'pain_management')) {
+        const subKey = purpose[pt];
+        if (subKey) rows.push({ requirement_key: subKey, increment: 1, rule_id: `skill:${code}:${pt}` });
+      }
+    }
+
     preview.push({ type: 'skill', skill_code: code, allowed: true, reason: `Counts toward ${maps.length} COA skill requirement(s).` });
   }
 

@@ -54,6 +54,7 @@ CREATE TABLE episode_skills (
   performed_by_srna INTEGER NOT NULL DEFAULT 0,
   successful INTEGER,
   validation_method TEXT,
+  purpose_type TEXT,
   line_type TEXT,
   notes TEXT
 );

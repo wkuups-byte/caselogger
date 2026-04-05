@@ -505,6 +505,34 @@ const SKILL_GROUPS: SkillGroup[] = [
 const CXR_SKILL_DEF: SkillDef = { skill_code: 'airway_chest_xray', label: 'Chest X-Ray Assessment' };
 const ALL_SKILL_DEFS: SkillDef[] = [...SKILL_GROUPS.flatMap((g) => g.skills), CXR_SKILL_DEF];
 
+// ── Skills eligible for simulated/actual toggle ──────────────────────────────
+// Skill codes where simulation_allowed=true in coa_requirements_catalog.csv
+const SIM_ELIGIBLE_SKILLS = new Set([
+  'airway_endoscopic',
+  'airway_alt_intubation_video',
+  'airway_chest_xray',
+  'cvc_nonpicc',
+  'picc',
+  'us_guided_regional',
+  'us_guided_vascular',
+  'pocus',
+  // All peripheral block sub-items (simulation allowed per COA footnote 5)
+  ...SKILL_GROUPS.flatMap((g) => g.skills)
+    .filter((s) => s.skill_code.startsWith('regional_pnb_') && !s.isParent)
+    .map((s) => s.skill_code),
+]);
+
+// ── Skills eligible for anesthesia/pain management toggle ────────────────────
+// All regional actual administration skills (not management, not parents)
+const PURPOSE_ELIGIBLE_SKILLS = new Set(
+  SKILL_GROUPS.flatMap((g) => g.skills)
+    .filter((s) =>
+      (s.skill_code.startsWith('regional_') && s.skill_code !== 'regional_management') &&
+      !s.isParent
+    )
+    .map((s) => s.skill_code),
+);
+
 // ── Skill code → COA requirement key (for guidance tooltips) ─────────────────
 const SKILL_TO_COA_KEY: Record<string, string> = {
   airway_inhalation_induction: 'coa.skill.airway.inhalation_induction',
@@ -674,7 +702,13 @@ function makeCaseRows(n: number, prev: CaseRow[]): CaseRow[] {
 }
 
 // Skill count state: { [skill_code]: { count: number; successCount: number; usGuided?: boolean } }
-type SkillCounts = Record<string, { count: number; successCount: number; usGuided?: boolean }>;
+type SkillCounts = Record<string, {
+  count: number;
+  successCount: number;
+  usGuided?: boolean;
+  validationMethod?: 'clinical' | 'simulated';
+  purposeType?: 'anesthesia' | 'pain_management';
+}>;
 
 function makeSkillCounts(): SkillCounts {
   return Object.fromEntries(ALL_SKILL_DEFS.map((s) => [s.skill_code, { count: 0, successCount: 0 }]));
@@ -969,8 +1003,17 @@ export function AddProcedureModal({
   const patchCaseRow = (i: number, patch: Partial<CaseRow>) =>
     setCaseRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
-  const patchSkill = (code: string, patch: { count?: number; successCount?: number; usGuided?: boolean }) =>
-    setSkillCounts((prev) => ({ ...prev, [code]: { ...prev[code], ...patch } }));
+  const patchSkill = (code: string, patch: { count?: number; successCount?: number; usGuided?: boolean; validationMethod?: 'clinical' | 'simulated' | undefined; purposeType?: 'anesthesia' | 'pain_management' | undefined }) =>
+    setSkillCounts((prev) => {
+      const cur = prev[code];
+      const next = { ...cur, ...patch };
+      // Clear toggles when count resets to 0
+      if (patch.count !== undefined && patch.count === 0) {
+        next.validationMethod = undefined;
+        next.purposeType = undefined;
+      }
+      return { ...prev, [code]: next };
+    });
 
   // Compute how many US-guided credits each target code (us_guided_regional / us_guided_vascular)
   // receives automatically from parent skill toggles — used to drive the Ultrasound counter display.
